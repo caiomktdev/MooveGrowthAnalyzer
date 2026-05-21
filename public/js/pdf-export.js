@@ -103,7 +103,8 @@ export async function generateInteractivePDF(plan, shareUrl) {
   y = drawLines(page, font, wrapText(plan.inputs.productDesc, PAGE_W - MARGIN * 2, font, 11), MARGIN, y, 11, GRAY);
 
   y -= 10;
-  const budgetLabel = plan.meta?.budgetLabel || `R$ ${plan.meta.budget.toLocaleString('pt-BR')}/mes`;
+  const budgetLabel = plan.meta?.budgetLabel
+    || (plan.meta?.budget != null ? `R$ ${Number(plan.meta.budget).toLocaleString('pt-BR')}/mes` : 'Budget nao informado');
   const tags = sanitize(`${plan.meta.nichoLabel} · ${plan.meta.modeloLabel} · ${plan.meta.ticketLabel} · ${budgetLabel}`);
   page.drawText(tags, { x: MARGIN, y, size: 10, font, color: PURPLE });
   page.drawText(`Gerado em ${new Date(plan.createdAt || Date.now()).toLocaleDateString('pt-BR')}`, {

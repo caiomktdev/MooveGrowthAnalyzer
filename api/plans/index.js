@@ -49,7 +49,12 @@ export async function POST(request) {
     createdAt: new Date().toISOString()
   };
 
-  await savePlan(id, plan);
+  try {
+    await savePlan(id, plan);
+  } catch (err) {
+    console.error('savePlan failed:', err);
+    return json(500, { error: 'Failed to save plan' });
+  }
 
   return json(201, {
     id,
