@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Moove Growth Analyzer | Análise Estratégica de Infoprodutos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/styles.css" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+<!-- Background atmosférico -->
+<div class="bg-atmosphere"></div>
+<div class="bg-noise"></div>
+<div class="bg-glow-orbs">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="logo-moove" onclick="resetApp()">
+      <img src="/assets/logo-moove.png" alt="Moove">
+    </div>
+    <div class="header-tag">Growth Analyzer</div>
+  </div>
+</header>
+
+<!-- ============================================================
+     HERO
+============================================================ -->
+<section class="hero" id="hero">
+  <div class="hero-content">
+    <div class="eyebrow">Análise estratégica de growth</div>
+    <h1>
+      <span class="line">Transforme seu infoproduto</span>
+      <span class="line gradient-text">em uma máquina de vendas</span>
+    </h1>
+    <p class="hero-subtitle">
+      Responda algumas perguntas sobre seu produto e nossa engine de growth gera, em segundos, um plano completo: persona, funil, tráfego, automação e KPIs prontos para execução.
+    </p>
+
+    <button class="btn btn-primary btn-large" onclick="startAnalysis()">
+      <span>Começar Análise Gratuita
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </span>
+    </button>
+
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-value">7</div>
+        <div class="stat-label">Pilares Analisados</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">60s</div>
+        <div class="stat-label">Para Receber o Plano</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">100%</div>
+        <div class="stat-label">Customizado p/ você</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     ANALYZER (Form Multi-Step)
+============================================================ -->
+<section class="analyzer" id="analyzer">
+  <div class="analyzer-container">
+
+    <!-- Progress -->
+    <div class="progress-bar">
+      <div class="progress-step active" data-step="1"></div>
+      <div class="progress-step" data-step="2"></div>
+      <div class="progress-step" data-step="3"></div>
+      <div class="progress-step" data-step="4"></div>
+      <div class="progress-step" data-step="5"></div>
+    </div>
+
+    <!-- STEP 1 -->
+    <div class="form-step active" data-step="1">
+      <div class="step-header">
+        <div class="step-number">PASSO 01 / 05</div>
+        <h2 class="step-title">Sobre o seu infoproduto</h2>
+        <p class="step-description">Vamos começar pelo básico para entender o que você vende.</p>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Nome do produto <span class="required">*</span></label>
+        <input type="text" class="form-input" id="productName" placeholder="Ex: Curso de Pré-Cálculo Definitivo" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Descrição rápida (transformação prometida) <span class="required">*</span></label>
+        <textarea class="form-textarea" id="productDesc" placeholder="Ex: Curso que reconstrói as bases de matemática do ensino médio em 30 dias para quem vai cursar engenharia"></textarea>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="form-step" data-step="2">
+      <div class="step-header">
+        <div class="step-number">PASSO 02 / 05</div>
+        <h2 class="step-title">Qual o nicho?</h2>
+        <p class="step-description">Selecione a categoria que melhor descreve seu produto.</p>
+      </div>
+
+      <div class="option-grid" id="nichoGrid">
+        <div class="option-card" data-value="educacao_exatas">
+          <div class="option-title">Educação / Exatas</div>
+          <div class="option-desc">Pré-cálculo, programação, concursos técnicos</div>
+        </div>
+        <div class="option-card" data-value="idiomas">
+          <div class="option-title">Idiomas</div>
+          <div class="option-desc">Inglês, espanhol, fluência, conversação</div>
+        </div>
+        <div class="option-card" data-value="concursos">
+          <div class="option-title">Concursos / ENEM</div>
+          <div class="option-desc">Preparatórios, OAB, vestibulares</div>
+        </div>
+        <div class="option-card" data-value="profissionalizante">
+          <div class="option-title">Profissionalizante</div>
+          <div class="option-desc">Marketing, design, vendas, negócios</div>
+        </div>
+        <div class="option-card" data-value="beleza">
+          <div class="option-title">Beleza / Estética</div>
+          <div class="option-desc">Maquiagem, depilação, design de sobrancelha</div>
+        </div>
+        <div class="option-card" data-value="saude_fitness">
+          <div class="option-title">Saúde / Fitness</div>
+          <div class="option-desc">Emagrecimento, treinos, nutrição</div>
+        </div>
+        <div class="option-card" data-value="desenvolvimento">
+          <div class="option-title">Desenvolvimento Pessoal</div>
+          <div class="option-desc">Mindset, produtividade, espiritualidade</div>
+        </div>
+        <div class="option-card" data-value="outros">
+          <div class="option-title">Outros nichos</div>
+          <div class="option-desc">Culinária, hobbies, especializados</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="form-step" data-step="3">
+      <div class="step-header">
+        <div class="step-number">PASSO 03 / 05</div>
+        <h2 class="step-title">Modelo de comercialização</h2>
+        <p class="step-description">Como você planeja vender este produto?</p>
+      </div>
+
+      <div class="option-grid" id="modeloGrid">
+        <div class="option-card" data-value="perpetuo">
+          <div class="option-title">Perpétuo (Evergreen)</div>
+          <div class="option-desc">Vendas contínuas via tráfego pago e funil automático</div>
+        </div>
+        <div class="option-card" data-value="lancamento">
+          <div class="option-title">Lançamento</div>
+          <div class="option-desc">CPL, evento ao vivo, abertura/fechamento de carrinho</div>
+        </div>
+        <div class="option-card" data-value="hibrido">
+          <div class="option-title">Híbrido (LIP)</div>
+          <div class="option-desc">Funil perpétuo + lançamentos cíclicos</div>
+        </div>
+        <div class="option-card" data-value="assinatura">
+          <div class="option-title">Assinatura</div>
+          <div class="option-desc">Membership recorrente mensal/anual</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="form-step" data-step="4">
+      <div class="step-header">
+        <div class="step-number">PASSO 04 / 05</div>
+        <h2 class="step-title">Faixa de preço do produto</h2>
+        <p class="step-description">Quanto você cobra (ou pretende cobrar) pelo infoproduto?</p>
+      </div>
+
+      <div class="option-grid" id="ticketGrid">
+        <div class="option-card" data-value="low">
+          <div class="option-title">Low Ticket</div>
+          <div class="option-desc">Até R$ 297 — alta escala, tráfego frio direto</div>
+        </div>
+        <div class="option-card" data-value="mid">
+          <div class="option-title">Mid Ticket</div>
+          <div class="option-desc">R$ 297 a R$ 1.997 — exige aquecimento</div>
+        </div>
+        <div class="option-card" data-value="high">
+          <div class="option-title">High Ticket</div>
+          <div class="option-desc">R$ 1.997 a R$ 4.997 — VSL longo + prova social</div>
+        </div>
+        <div class="option-card" data-value="premium">
+          <div class="option-title">Premium</div>
+          <div class="option-desc">Acima de R$ 4.997 — venda consultiva</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 5 -->
+    <div class="form-step" data-step="5">
+      <div class="step-header">
+        <div class="step-number">PASSO 05 / 05</div>
+        <h2 class="step-title">Orçamento mensal de marketing</h2>
+        <p class="step-description">Quanto você consegue investir em tráfego pago e ferramentas por mês?</p>
+      </div>
+
+      <div class="option-grid" id="budgetGrid">
+        <div class="option-card" data-value="750">
+          <div class="option-title">R$ 500 a R$ 1.000</div>
+          <div class="option-desc">Primeiros testes e validação</div>
+        </div>
+        <div class="option-card" data-value="1750">
+          <div class="option-title">R$ 1.500 a R$ 2.000</div>
+          <div class="option-desc">Validação com budget enxuto</div>
+        </div>
+        <div class="option-card" data-value="2750">
+          <div class="option-title">R$ 2.500 a R$ 3.000</div>
+          <div class="option-desc">Crescimento inicial</div>
+        </div>
+        <div class="option-card" data-value="3750">
+          <div class="option-title">R$ 3.500 a R$ 4.000</div>
+          <div class="option-desc">Operação em tração</div>
+        </div>
+        <div class="option-card" data-value="4750">
+          <div class="option-title">R$ 4.500 a R$ 5.000</div>
+          <div class="option-desc">Crescimento estruturado</div>
+        </div>
+        <div class="option-card" data-value="5500">
+          <div class="option-title">R$ 5k a R$ 6.000</div>
+          <div class="option-desc">Operação consolidada com escala</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-navigation">
+      <button class="btn btn-secondary" id="prevBtn" onclick="prevStep()" style="visibility:hidden;">← Voltar</button>
+      <button class="btn btn-primary" id="nextBtn" onclick="nextStep()">
+        <span>Próximo →</span>
+      </button>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================================================
+     LOADING
+============================================================ -->
+<div class="loading-screen" id="loadingScreen">
+  <div class="loading-logo-anim">
+    <div class="loading-loop"></div>
+  </div>
+  <div class="loading-title">Gerando seu plano de growth...</div>
+  <div class="loading-status" id="loadingStatus">Inicializando engine</div>
+
+  <div class="loading-steps">
+    <div class="loading-step-item" data-step="1">
+      <div class="check">○</div>
+      <span>Mapeando público-alvo e dores críticas</span>
+    </div>
+    <div class="loading-step-item" data-step="2">
+      <div class="check">○</div>
+      <span>Construindo persona detalhada</span>
+    </div>
+    <div class="loading-step-item" data-step="3">
+      <div class="check">○</div>
+      <span>Desenhando funil de jornada</span>
+    </div>
+    <div class="loading-step-item" data-step="4">
+      <div class="check">○</div>
+      <span>Calculando distribuição de tráfego pago</span>
+    </div>
+    <div class="loading-step-item" data-step="5">
+      <div class="check">○</div>
+      <span>Publicando plano compartilhável</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     RESULTS DASHBOARD
+============================================================ -->
+<section class="results" id="results">
+
+  <div class="results-header">
+    <div class="eyebrow">Análise pronta</div>
+    <h2>Seu <span class="gradient-text">plano de guerra</span></h2>
+    <p>Plano completo gerado com base nas melhores práticas Moove para o seu nicho, modelo e ticket.</p>
+  </div>
+
+  <!-- PRODUCT CARD -->
+  <div class="product-card" id="productCard">
+    <div class="product-card-header">
+      <div>
+        <div class="product-name" id="resultProductName">—</div>
+        <div class="product-tags" id="resultTags"></div>
+      </div>
+      <button class="btn btn-secondary" onclick="downloadPlanPdf()">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="6 9 6 2 18 2 18 9"/>
+          <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+          <rect x="6" y="14" width="12" height="8"/>
+        </svg>
+        Baixar PDF
+      </button>
+    </div>
+    <p class="product-summary" id="resultSummary"></p>
+  </div>
+  <!-- SHARE PANEL -->
+  <div class="card share-panel" id="sharePanel" style="display:none;">
+    <div class="share-panel-title">Compartilhar com cliente</div>
+    <p class="share-panel-desc">Seu plano foi publicado em uma página exclusiva. Envie o link ou baixe o PDF interativo.</p>
+    <div class="share-url-row">
+      <input type="text" id="shareUrl" readonly placeholder="Gerando link..." />
+      <button class="btn btn-secondary" type="button" onclick="copyShareUrl()">Copiar link</button>
+    </div>
+    <div class="share-actions">
+      <button class="btn btn-primary" type="button" onclick="openSharePage()">
+        <span>Abrir página pública →</span>
+      </button>
+      <button class="btn btn-secondary" type="button" onclick="downloadPlanPdf()">Baixar PDF interativo</button>
+    </div>
+    <div class="share-status" id="shareStatus"></div>
+  </div>
+
+
+
+  <!-- SECTION 1: PERSONA -->
+  <div class="result-section">
+    <div class="section-header">
+      <div class="section-number">01</div>
+      <div class="section-title-block">
+        <h3 class="section-title">Persona / ICP</h3>
+        <p class="section-description">O avatar exato do seu comprador ideal</p>
+      </div>
+    </div>
+
+    <div class="card persona-card" id="personaCard">
+      <div class="persona-avatar" id="personaAvatar">L</div>
+      <div class="persona-info">
+        <h3 id="personaName">—</h3>
+        <div class="persona-subtitle" id="personaTitle">—</div>
+        <p id="personaBio" style="color: var(--text-gray); font-size: 14px;"></p>
+        <div class="persona-attributes" id="personaAttrs"></div>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-top: 24px;">
+      <div class="card">
+        <div class="card-title"><div class="dot"></div>Dores críticas</div>
+        <ul class="bullet-list" id="personaDores"></ul>
+      </div>
+      <div class="card">
+        <div class="card-title"><div class="dot"></div>Desejos & transformação</div>
+        <ul class="bullet-list" id="personaDesejos"></ul>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top: 24px;">
+      <div class="card-title"><div class="dot"></div>Objeções secretas de compra</div>
+      <ul class="bullet-list" id="personaObjecoes"></ul>
+    </div>
+  </div>
+
+  <!-- SECTION 2: JORNADA / FUNIL -->
+  <div class="result-section">
+    <div class="section-header">
+      <div class="section-number">02</div>
+      <div class="section-title-block">
+        <h3 class="section-title">Jornada de compra</h3>
+        <p class="section-description">Funil completo do desconhecido ao comprador</p>
+      </div>
+    </div>
+
+    <div class="funnel-container" id="funnelContainer"></div>
+  </div>
+
+  <!-- SECTION 3: CAPTURA DE LEADS -->
+  <div class="result-section">
+    <div class="section-header">
+      <div class="section-number">03</div>
+      <div class="section-title-block">
+        <h3 class="section-title">Estratégia de captação</h3>
+        <p class="section-description">O ímã digital que vai gerar leads qualificados</p>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title"><div class="dot"></div>Isca digital recomendada</div>
+        <div id="iscaA"></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><div class="dot"></div>Headline da landing page</div>
+        <div id="lpHeadline"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4: PAGINA DE VENDAS -->
+  <div class="result-section">
+    <div class="section-header">
+      <div class="section-number">04</div>
+      <div class="section-title-block">
+        <h3 class="section-title">Arquitetura da página de vendas</h3>
+        <p class="section-description">Estrutura seção a seção em ordem de conversão</p>
+      </div>
+    </div>
+
+    <div class="landing-blueprint" id="landingBlueprint"></div>
+  </div>
+
+  <!-- SECTION 5: TRÁFEGO PAGO -->
+  <div class="result-section">
+    <div class="section-header">
+      <div class="section-number">05</div>
+      <div class="section-title-block">
+        <h3 class="section-title">Tráfego pago</h3>
+        <p class="section-description">Distribuição de verba, campanhas e metas</p>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="chart-card">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">Distribuição de verba</div>
+            <div class="chart-subtitle" id="budgetSubtitle">Mensal</div>
+          </div>
+        </div>
+        <div class="chart-container">
+          <canvas id="budgetChart"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">Projeção de crescimento</div>
+            <div class="chart-subtitle">Vendas estimadas — 90 dias</div>
+          </div>
+        </div>
+        <div class="chart-container">
+          <canvas id="growthChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-wrapper" style="margin-top: 24px;">
+      <table class="data-table" id="campaignTable">
+        <thead>
+          <tr>
+            <th>Campanha</th>
+            <th>Objetivo</th>
+            <th>Público</th>
+            <th>Investimento</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="grid-4" style="margin-top: 24px;" id="kpiGrid"></div>
+  </div>
+
+  <!-- SECTION 6: CONTEUDO ORGÂNICO -->
+  <div class="result-section">
+    <div class="section-header">
+      <div class="section-number">06</div>
+      <div class="section-title-block">
+        <h3 class="section-title">Tráfego orgânico & conteúdo</h3>
+        <p class="section-description">Pilares editoriais e funil de conteúdo</p>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="chart-card">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">Mix de pilares editoriais</div>
+            <div class="chart-subtitle">Distribuição recomendada</div>
+          </div>
+        </div>
+        <div class="chart-container">
+          <canvas id="contentChart"></canvas>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><div class="dot"></div>Exemplos práticos de posts</div>
+        <div id="contentExamples"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 7: AUTOMAÇÃO -->
+  <div class="result-section">
+    <div class="section-header">
+      <div class="section-number">07</div>
+      <div class="section-title-block">
+        <h3 class="section-title">Automação & recuperação</h3>
+        <p class="section-description">Fluxos de nutrição, carrinho e relacionamento</p>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title"><div class="dot"></div>Fluxo de nutrição pós-captura</div>
+        <div class="flow-timeline" id="nurtureFlow"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><div class="dot"></div>Recuperação de carrinho</div>
+        <div class="flow-timeline" id="cartFlow"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA FINAL -->
+  <div class="cta-final">
+    <div class="eyebrow" style="justify-content: center;">Pronto para executar?</div>
+    <h2>Quer transformar este plano em <span class="gradient-text">faturamento real?</span></h2>
+    <p>Nosso time de growth da Moove pode tirar este plano do papel — gestão, tráfego, criativos, landing pages, dashboards e sistemas sob medida.</p>
+    <div class="cta-actions">
+      <button class="btn btn-primary btn-large" onclick="contactMoove()">
+        <span>Falar com um especialista
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </span>
+      </button>
+      <button class="btn btn-secondary btn-large" onclick="resetApp()">↺ Nova análise</button>
+    </div>
+  </div>
+
+</section>
+
+<footer>
+  <div>© <span id="year"></span> Moove · Growth Predictable · Análise gerada por engine proprietária</div>
+</footer>
+
+
+<script type="module" src="/js/analyzer-app.js"></script>
+</body>
+</html>

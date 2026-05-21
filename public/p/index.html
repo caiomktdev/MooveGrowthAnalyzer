@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Plano de Growth | Moove</title>
+<meta property="og:title" content="Plano de Growth | Moove" />
+<meta property="og:description" content="Plano estratégico de growth gerado pela Moove" />
+<meta property="og:type" content="website" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/styles.css" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+<div class="bg-atmosphere"></div>
+<div class="bg-noise"></div>
+<div class="bg-glow-orbs">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
+<header>
+  <div class="header-inner">
+    <a href="/" class="logo-moove">
+      <img src="/assets/logo-moove.png" alt="Moove">
+    </a>
+    <div class="header-tag">Plano de Growth</div>
+  </div>
+</header>
+
+<div class="container">
+  <div class="share-loading" id="shareLoading">
+    <div class="loading-loop" style="width:48px;height:48px;border:3px solid var(--border);border-top-color:var(--purple-bright);border-radius:50%;animation:spin 1s linear infinite;margin-bottom:20px;"></div>
+    <p>Carregando plano estratégico...</p>
+  </div>
+
+  <div class="share-error-page" id="shareError" style="display:none;">
+    <h2>Plano indisponível</h2>
+    <p id="shareErrorMsg">Este link expirou ou não existe.</p>
+    <a href="/" class="btn btn-primary"><span>Criar nova análise →</span></a>
+  </div>
+
+  <div id="shareContent" style="display:none;">
+    <div class="share-toolbar">
+      <span style="color:var(--text-gray);font-size:13px;">Gerado em <strong id="shareDate" style="color:var(--text-soft);">—</strong></span>
+      <button class="btn btn-secondary" type="button" onclick="copyShareUrl()">Copiar link</button>
+      <button class="btn btn-primary" type="button" onclick="downloadPlanPdf()"><span>Baixar PDF interativo</span></button>
+      <button class="btn btn-secondary" type="button" onclick="contactMoove()">Falar com Moove</button>
+    </div>
+    <p id="shareToast" style="text-align:center;color:#86efac;font-size:13px;min-height:20px;margin-bottom:16px;"></p>
+
+<section class="results active" id="results">
+
+  <div class="results-header">
+    <div class="eyebrow">Análise pronta</div>
+    <h2>Seu <span class="gradient-text">plano de guerra</span></h2>
+    <p>Plano completo gerado com base nas melhores práticas Moove para o seu nicho, modelo e ticket.</p>
+  </div>
+
+  <!-- PRODUCT CARD -->
+  <div class="product-card" id="productCard">
+    <div class="product-card-header">
+      <div>
+        <div class="product-name" id="resultProductName">—</div>
+        <div class="product-tags" id="resultTags"></div>
+      </div>
+      <button class="btn btn-secondary" onclick="downloadPlanPdf()">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="6 9 6 2 18 2 18 9"/>
+          <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+          <rect x="6" y="14" width="12" height="8"/>
+        </svg>
+        Baixar PDF
+      </button>
+    </div>
+    <p class="product-summary" id="resultSummary"></p>
+  </div>
+  <!-- SECTION 1: PERSONA -->
+  <div class="result-section">
+    <div class="section-header">
+      <div class="section-number">01</div>
+      <div class="section-title-block">
+        <h3 class="section-title">Persona / ICP</h3>
+        <p class="section-description">O avatar exato do seu comprador ideal</p>
+      </div>
+    </div>
+
+    <div class="card persona-card" id="personaCard">
+      <div class="persona-avatar" id="personaAvatar">L</div>
+      <div class="persona-info">
+        <h3 id="personaName">—</h3>
+        <div class="persona-subtitle" id="personaTitle">—</div>
+        <p id="personaBio" style="color: var(--text-gray); font-size: 14px;"></p>
+        <div class="persona-attributes" id="personaAttrs"></div>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-top: 24px;">
+      <div class="card">
+        <div class="card-title"><div class="dot"></div>Dores críticas</div>
+        <ul class="bullet-list" id="personaDores"></ul>
+      </div>
+      <div class="card">
+        <div class="card-title"><div class="dot"></div>Desejos & transformação</div>
+        <ul class="bullet-list" id="personaDesejos"></ul>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top: 24px;">
+      <div class="card-title"><div class="dot"></div>Objeções secretas de compra</div>
+      <ul class="bullet-list" id="personaObjecoes"></ul>
+    </div>
+  </div>
+
+  <!-- SECTION 2: JORNADA / FUNIL -->
+  <div class="result-section">
+    <div class="section-header">
+      <div class="section-number">02</div>
+      <div class="section-title-block">
+        <h3 class="section-title">Jornada de compra</h3>
+        <p class="section-description">Funil completo do desconhecido ao comprador</p>
+      </div>
+    </div>
+
+    <div class="funnel-container" id="funnelContainer"></div>
+  </div>
+
+  <!-- SECTION 3: CAPTURA DE LEADS -->
+  <div class="result-section">
+    <div class="section-header">
+      <div class="section-number">03</div>
+      <div class="section-title-block">
+        <h3 class="section-title">Estratégia de captação</h3>
+        <p class="section-description">O ímã digital que vai gerar leads qualificados</p>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title"><div class="dot"></div>Isca digital recomendada</div>
+        <div id="iscaA"></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><div class="dot"></div>Headline da landing page</div>
+        <div id="lpHeadline"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4: PAGINA DE VENDAS -->
+  <div class="result-section">
+    <div class="section-header">
+      <div class="section-number">04</div>
+      <div class="section-title-block">
+        <h3 class="section-title">Arquitetura da página de vendas</h3>
+        <p class="section-description">Estrutura seção a seção em ordem de conversão</p>
+      </div>
+    </div>
+
+    <div class="landing-blueprint" id="landingBlueprint"></div>
+  </div>
+
+  <!-- SECTION 5: TRÁFEGO PAGO -->
+  <div class="result-section">
+    <div class="section-header">
+      <div class="section-number">05</div>
+      <div class="section-title-block">
+        <h3 class="section-title">Tráfego pago</h3>
+        <p class="section-description">Distribuição de verba, campanhas e metas</p>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="chart-card">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">Distribuição de verba</div>
+            <div class="chart-subtitle" id="budgetSubtitle">Mensal</div>
+          </div>
+        </div>
+        <div class="chart-container">
+          <canvas id="budgetChart"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">Projeção de crescimento</div>
+            <div class="chart-subtitle">Vendas estimadas — 90 dias</div>
+          </div>
+        </div>
+        <div class="chart-container">
+          <canvas id="growthChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-wrapper" style="margin-top: 24px;">
+      <table class="data-table" id="campaignTable">
+        <thead>
+          <tr>
+            <th>Campanha</th>
+            <th>Objetivo</th>
+            <th>Público</th>
+            <th>Investimento</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="grid-4" style="margin-top: 24px;" id="kpiGrid"></div>
+  </div>
+
+  <!-- SECTION 6: CONTEUDO ORGÂNICO -->
+  <div class="result-section">
+    <div class="section-header">
+      <div class="section-number">06</div>
+      <div class="section-title-block">
+        <h3 class="section-title">Tráfego orgânico & conteúdo</h3>
+        <p class="section-description">Pilares editoriais e funil de conteúdo</p>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="chart-card">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">Mix de pilares editoriais</div>
+            <div class="chart-subtitle">Distribuição recomendada</div>
+          </div>
+        </div>
+        <div class="chart-container">
+          <canvas id="contentChart"></canvas>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><div class="dot"></div>Exemplos práticos de posts</div>
+        <div id="contentExamples"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 7: AUTOMAÇÃO -->
+  <div class="result-section">
+    <div class="section-header">
+      <div class="section-number">07</div>
+      <div class="section-title-block">
+        <h3 class="section-title">Automação & recuperação</h3>
+        <p class="section-description">Fluxos de nutrição, carrinho e relacionamento</p>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title"><div class="dot"></div>Fluxo de nutrição pós-captura</div>
+        <div class="flow-timeline" id="nurtureFlow"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><div class="dot"></div>Recuperação de carrinho</div>
+        <div class="flow-timeline" id="cartFlow"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA FINAL -->
+  <div class="cta-final">
+    <div class="eyebrow" style="justify-content: center;">Pronto para executar?</div>
+    <h2>Quer transformar este plano em <span class="gradient-text">faturamento real?</span></h2>
+    <p>Nosso time de growth da Moove pode tirar este plano do papel — gestão, tráfego, criativos, landing pages, dashboards e sistemas sob medida.</p>
+    <div class="cta-actions">
+      <button class="btn btn-primary btn-large" onclick="contactMoove()">
+        <span>Falar com um especialista
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </span>
+      </button>
+      <button class="btn btn-secondary btn-large" onclick="downloadPlanPdf()">Baixar PDF interativo</button>
+    </div>
+  </div>
+
+</section>
+  </div>
+</div>
+
+<footer>
+  <div>© <span id="year"></span> Moove · Growth Predictable · Plano compartilhado</div>
+</footer>
+
+<style>@keyframes spin { to { transform: rotate(360deg); } }</style>
+<script type="module" src="/js/share-view.js"></script>
+</body>
+</html>

@@ -1,0 +1,2844 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Moove Growth Analyzer | Análise Estratégica de Infoprodutos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+/* ============================================================
+   MOOVE — Growth Analyzer
+   Identidade visual: roxo neon + fundo escuro místico
+============================================================ */
+:root {
+  --purple-primary: #8B5CF6;
+  --purple-light: #A855F7;
+  --purple-bright: #C084FC;
+  --purple-glow: #B794F4;
+  --purple-deep: #6D28D9;
+  --purple-dark: #4C1D95;
+  --purple-darker: #2E1065;
+  --purple-shadow: #1E0B4D;
+  --black: #000000;
+  --bg-base: #07050F;
+  --bg-dark: #0A0612;
+  --bg-card: rgba(25, 15, 45, 0.55);
+  --bg-card-hover: rgba(45, 25, 75, 0.75);
+  --bg-input: rgba(15, 8, 30, 0.7);
+  --border: rgba(139, 92, 246, 0.25);
+  --border-bright: rgba(168, 85, 247, 0.6);
+  --border-glow: rgba(192, 132, 252, 0.9);
+  --text-white: #FFFFFF;
+  --text-soft: #E8E0FF;
+  --text-gray: #A89FB8;
+  --text-dim: #6B5C8A;
+  --gradient-primary: linear-gradient(135deg, #8B5CF6 0%, #A855F7 50%, #6D28D9 100%);
+  --gradient-bright: linear-gradient(135deg, #C084FC 0%, #A855F7 50%, #8B5CF6 100%);
+  --gradient-dark: linear-gradient(180deg, #1A0B35 0%, #0A0612 100%);
+  --gradient-radial: radial-gradient(circle at 50% 0%, rgba(139, 92, 246, 0.18) 0%, transparent 60%);
+  --glow-purple: 0 0 30px rgba(168, 85, 247, 0.4), 0 0 60px rgba(139, 92, 246, 0.2);
+  --glow-strong: 0 0 40px rgba(192, 132, 252, 0.6), 0 0 80px rgba(168, 85, 247, 0.4);
+  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(139, 92, 246, 0.1) inset;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg-base);
+  color: var(--text-white);
+  min-height: 100vh;
+  overflow-x: hidden;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================================
+   BACKGROUND ATMOSFÉRICO — floresta digital roxa
+============================================================ */
+.bg-atmosphere {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background:
+    radial-gradient(ellipse at top, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at bottom right, rgba(168, 85, 247, 0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at bottom left, rgba(76, 29, 149, 0.18) 0%, transparent 50%),
+    linear-gradient(180deg, #0A0612 0%, #07050F 50%, #050208 100%);
+}
+
+.bg-noise {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.03;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.6'/%3E%3C/svg%3E");
+}
+
+.bg-glow-orbs {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.4;
+  animation: float 20s ease-in-out infinite;
+}
+.orb-1 { width: 400px; height: 400px; background: #8B5CF6; top: -100px; left: -100px; }
+.orb-2 { width: 500px; height: 500px; background: #6D28D9; top: 40%; right: -200px; animation-delay: -5s; }
+.orb-3 { width: 300px; height: 300px; background: #A855F7; bottom: -100px; left: 30%; animation-delay: -10s; }
+
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(50px, -30px) scale(1.1); }
+  66% { transform: translate(-30px, 50px) scale(0.9); }
+}
+
+/* ============================================================
+   HEADER + LOGO MOOVE
+============================================================ */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 20px 40px;
+  background: rgba(7, 5, 15, 0.7);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+
+.header-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo-moove {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: filter 0.3s;
+}
+.logo-moove:hover { filter: drop-shadow(0 0 12px rgba(168, 85, 247, 0.7)); }
+
+.logo-moove img { height: 30px; width: auto; display: block; }
+
+.header-tag {
+  font-family: 'Space Grotesk', monospace;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--purple-bright);
+  padding: 6px 14px;
+  border: 1px solid var(--border-bright);
+  border-radius: 100px;
+  background: rgba(139, 92, 246, 0.08);
+}
+
+/* ============================================================
+   GENERIC LAYOUT
+============================================================ */
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+.section { padding: 80px 0; position: relative; }
+
+h1, h2, h3, h4 {
+  font-family: 'Inter', sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.gradient-text {
+  background: var(--gradient-bright);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Space Grotesk', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--purple-bright);
+  margin-bottom: 16px;
+}
+.eyebrow::before {
+  content: '';
+  width: 24px;
+  height: 1px;
+  background: var(--purple-bright);
+}
+
+/* ============================================================
+   HERO SECTION
+============================================================ */
+.hero {
+  min-height: calc(100vh - 80px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 60px 32px;
+  position: relative;
+}
+
+.hero-content { max-width: 880px; }
+
+.hero h1 {
+  font-size: clamp(40px, 7vw, 84px);
+  line-height: 0.95;
+  margin-bottom: 24px;
+  font-weight: 900;
+}
+
+.hero h1 .line {
+  display: block;
+}
+
+.hero-subtitle {
+  font-size: clamp(16px, 1.6vw, 20px);
+  color: var(--text-gray);
+  margin-bottom: 48px;
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
+}
+
+.hero-stats {
+  display: flex;
+  gap: 48px;
+  justify-content: center;
+  margin: 56px 0;
+  flex-wrap: wrap;
+}
+
+.stat {
+  text-align: center;
+}
+.stat-value {
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--purple-bright);
+  font-family: 'Space Grotesk', sans-serif;
+  text-shadow: 0 0 20px rgba(192, 132, 252, 0.5);
+}
+.stat-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text-dim);
+  margin-top: 6px;
+}
+
+/* ============================================================
+   BUTTONS
+============================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 32px;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  border-radius: 100px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary {
+  background: var(--gradient-primary);
+  color: white;
+  box-shadow: var(--glow-purple);
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--glow-strong);
+}
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #C084FC 0%, #A855F7 100%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  border-radius: inherit;
+}
+.btn-primary:hover::before { opacity: 1; }
+.btn-primary span { position: relative; z-index: 1; display: flex; align-items: center; gap: 10px; }
+
+.btn-secondary {
+  background: transparent;
+  color: var(--purple-bright);
+  border: 1px solid var(--border-bright);
+}
+.btn-secondary:hover {
+  background: rgba(168, 85, 247, 0.1);
+  border-color: var(--purple-bright);
+}
+
+.btn-large { padding: 20px 40px; font-size: 16px; }
+.btn-icon { width: 18px; height: 18px; }
+
+/* ============================================================
+   FORM (analyzer)
+============================================================ */
+.analyzer {
+  display: none;
+  padding: 60px 32px;
+}
+.analyzer.active { display: block; }
+
+.analyzer-container {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.progress-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 48px;
+}
+.progress-step {
+  flex: 1;
+  height: 4px;
+  background: rgba(139, 92, 246, 0.15);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+.progress-step.completed {
+  background: var(--gradient-primary);
+  box-shadow: 0 0 12px rgba(168, 85, 247, 0.6);
+}
+.progress-step.active::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--gradient-primary);
+  animation: progressPulse 2s ease-in-out infinite;
+}
+
+@keyframes progressPulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; box-shadow: 0 0 16px rgba(168, 85, 247, 0.8); }
+}
+
+.form-step {
+  display: none;
+  animation: fadeIn 0.5s ease;
+}
+.form-step.active { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.step-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+.step-number {
+  display: inline-block;
+  font-family: 'Space Grotesk', monospace;
+  font-size: 12px;
+  color: var(--purple-bright);
+  letter-spacing: 3px;
+  margin-bottom: 12px;
+}
+.step-title {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.step-description {
+  color: var(--text-gray);
+  font-size: 15px;
+}
+
+.form-group {
+  margin-bottom: 24px;
+}
+.form-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  letter-spacing: 0.5px;
+  color: var(--text-soft);
+  text-transform: uppercase;
+}
+.form-label .required { color: var(--purple-bright); margin-left: 4px; }
+
+.form-input, .form-textarea, .form-select {
+  width: 100%;
+  padding: 16px 20px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--text-white);
+  font-family: inherit;
+  font-size: 15px;
+  transition: all 0.3s;
+}
+.form-input:focus, .form-textarea:focus, .form-select:focus {
+  outline: none;
+  border-color: var(--purple-bright);
+  background: rgba(25, 15, 45, 0.9);
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15), 0 0 20px rgba(168, 85, 247, 0.2);
+}
+.form-textarea { min-height: 120px; resize: vertical; }
+.form-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A855F7' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 20px center;
+  background-size: 18px;
+  padding-right: 50px;
+  cursor: pointer;
+}
+
+.option-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+.option-card {
+  padding: 18px 20px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+}
+.option-card:hover {
+  border-color: var(--border-bright);
+  background: var(--bg-card-hover);
+  transform: translateY(-2px);
+}
+.option-card.selected {
+  border-color: var(--purple-bright);
+  background: rgba(139, 92, 246, 0.12);
+  box-shadow: 0 0 0 1px var(--purple-bright), 0 0 20px rgba(168, 85, 247, 0.3);
+}
+.option-card.selected::after {
+  content: '✓';
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 22px;
+  height: 22px;
+  background: var(--gradient-primary);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+}
+.option-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: var(--text-white);
+}
+.option-desc {
+  font-size: 13px;
+  color: var(--text-gray);
+  line-height: 1.5;
+}
+
+.form-navigation {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 48px;
+  gap: 16px;
+}
+.form-navigation .btn { flex: 1; max-width: 220px; }
+
+/* ============================================================
+   LOADING SCREEN
+============================================================ */
+.loading-screen {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(7, 5, 15, 0.96);
+  backdrop-filter: blur(20px);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 40px;
+}
+.loading-screen.active { display: flex; }
+
+.loading-logo-anim {
+  width: 120px;
+  height: 60px;
+  position: relative;
+  margin-bottom: 40px;
+}
+.loading-loop {
+  width: 100%;
+  height: 100%;
+  border: 3px solid transparent;
+  border-radius: 30px;
+  background: linear-gradient(135deg, #8B5CF6, #A855F7) border-box;
+  -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: loadingSpin 2s linear infinite;
+  box-shadow: 0 0 30px rgba(168, 85, 247, 0.6);
+}
+@keyframes loadingSpin {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(0.95); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+.loading-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  text-align: center;
+}
+.loading-status {
+  color: var(--purple-bright);
+  font-family: 'Space Grotesk', monospace;
+  font-size: 13px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 32px;
+  min-height: 20px;
+  text-align: center;
+}
+
+.loading-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 360px;
+  width: 100%;
+}
+.loading-step-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  background: rgba(25, 15, 45, 0.5);
+  border-radius: 10px;
+  border: 1px solid rgba(139, 92, 246, 0.15);
+  font-size: 13px;
+  color: var(--text-gray);
+  opacity: 0.4;
+  transition: all 0.4s;
+}
+.loading-step-item.done {
+  opacity: 1;
+  color: var(--text-white);
+  border-color: var(--border-bright);
+}
+.loading-step-item .check {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--text-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  flex-shrink: 0;
+}
+.loading-step-item.done .check {
+  background: var(--gradient-primary);
+  border-color: transparent;
+  color: white;
+}
+
+/* ============================================================
+   RESULTS DASHBOARD
+============================================================ */
+.results {
+  display: none;
+  padding: 60px 32px 120px;
+}
+.results.active { display: block; }
+
+.results-header {
+  text-align: center;
+  margin-bottom: 64px;
+  padding: 0 20px;
+}
+.results-header h2 {
+  font-size: clamp(32px, 5vw, 56px);
+  margin-bottom: 16px;
+  font-weight: 900;
+}
+.results-header p {
+  color: var(--text-gray);
+  font-size: 17px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.product-card {
+  max-width: 900px;
+  margin: 0 auto 80px;
+  padding: 32px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-bright);
+  border-radius: 24px;
+  backdrop-filter: blur(20px);
+  position: relative;
+  overflow: hidden;
+}
+.product-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--purple-bright), transparent);
+}
+.product-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+.product-name {
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+.product-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.tag {
+  padding: 6px 14px;
+  background: rgba(139, 92, 246, 0.15);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--purple-bright);
+  letter-spacing: 0.5px;
+}
+.product-summary {
+  color: var(--text-gray);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+/* SECTIONS WITHIN RESULTS */
+.result-section {
+  max-width: 1280px;
+  margin: 0 auto 80px;
+  padding: 0 20px;
+}
+.section-header {
+  display: flex;
+  align-items: flex-end;
+  gap: 24px;
+  margin-bottom: 32px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.section-number {
+  font-family: 'Space Grotesk', monospace;
+  font-size: 60px;
+  font-weight: 700;
+  line-height: 0.9;
+  background: var(--gradient-bright);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  opacity: 0.7;
+}
+.section-title-block { flex: 1; min-width: 200px; }
+.section-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.section-description {
+  color: var(--text-gray);
+  font-size: 14px;
+}
+
+/* CARDS */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 28px;
+  backdrop-filter: blur(12px);
+  position: relative;
+  transition: all 0.3s;
+}
+.card:hover {
+  border-color: var(--border-bright);
+  transform: translateY(-2px);
+}
+.card-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.card-title .dot {
+  width: 8px;
+  height: 8px;
+  background: var(--purple-bright);
+  border-radius: 50%;
+  box-shadow: 0 0 12px var(--purple-bright);
+}
+
+.grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 20px; }
+.grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+.grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+
+/* PERSONA */
+.persona-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 32px;
+  padding: 36px;
+}
+.persona-avatar {
+  width: 140px;
+  height: 140px;
+  background: var(--gradient-primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 56px;
+  font-weight: 800;
+  color: white;
+  position: relative;
+  box-shadow: 0 0 40px rgba(168, 85, 247, 0.5);
+}
+.persona-avatar::after {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border: 2px solid var(--purple-bright);
+  border-radius: 50%;
+  opacity: 0.3;
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 0.2; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.05); }
+}
+.persona-info h3 {
+  font-size: 26px;
+  margin-bottom: 6px;
+}
+.persona-subtitle {
+  color: var(--purple-bright);
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+.persona-attributes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+}
+.persona-attr {
+  padding: 12px 16px;
+  background: rgba(15, 8, 30, 0.6);
+  border-radius: 10px;
+  border-left: 2px solid var(--purple-bright);
+}
+.persona-attr-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-dim);
+  margin-bottom: 4px;
+}
+.persona-attr-value {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-white);
+}
+
+.bullet-list {
+  list-style: none;
+  padding: 0;
+}
+.bullet-list li {
+  padding: 10px 0 10px 24px;
+  position: relative;
+  color: var(--text-soft);
+  font-size: 14px;
+  line-height: 1.6;
+}
+.bullet-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 18px;
+  width: 12px;
+  height: 1px;
+  background: var(--purple-bright);
+}
+
+/* FUNIL */
+.funnel-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  align-items: center;
+  padding: 20px 0;
+}
+.funnel-stage {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  padding: 24px 32px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  margin-bottom: 12px;
+  transition: all 0.3s;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 20px;
+  align-items: center;
+}
+.funnel-stage:hover {
+  border-color: var(--purple-bright);
+  transform: translateX(4px);
+}
+.funnel-stage-1 { width: 100%; }
+.funnel-stage-2 { width: 90%; }
+.funnel-stage-3 { width: 75%; }
+.funnel-stage-4 { width: 55%; }
+.funnel-icon {
+  width: 48px;
+  height: 48px;
+  background: var(--gradient-primary);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 800;
+  color: white;
+  flex-shrink: 0;
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+}
+.funnel-info h4 {
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+.funnel-info p {
+  font-size: 13px;
+  color: var(--text-gray);
+  line-height: 1.5;
+}
+.funnel-rate {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--purple-bright);
+}
+
+/* TABLE */
+.table-wrapper {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  backdrop-filter: blur(12px);
+}
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.data-table th, .data-table td {
+  padding: 16px 20px;
+  text-align: left;
+  border-bottom: 1px solid rgba(139, 92, 246, 0.1);
+}
+.data-table th {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--purple-bright);
+  font-weight: 600;
+  background: rgba(15, 8, 30, 0.6);
+}
+.data-table td {
+  font-size: 14px;
+  color: var(--text-soft);
+}
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: rgba(139, 92, 246, 0.05); }
+.data-table .highlight {
+  color: var(--purple-bright);
+  font-weight: 600;
+}
+
+/* CHART CONTAINERS */
+.chart-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 28px;
+  backdrop-filter: blur(12px);
+}
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.chart-title {
+  font-size: 18px;
+  font-weight: 700;
+}
+.chart-subtitle {
+  font-size: 13px;
+  color: var(--text-gray);
+  margin-top: 4px;
+}
+.chart-container {
+  position: relative;
+  height: 320px;
+}
+
+/* KPI CARDS */
+.kpi-card {
+  padding: 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+.kpi-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--purple-bright), transparent);
+}
+.kpi-card:hover {
+  border-color: var(--purple-bright);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(139, 92, 246, 0.2);
+}
+.kpi-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text-dim);
+  margin-bottom: 12px;
+}
+.kpi-value {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--purple-bright);
+  text-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+  margin-bottom: 8px;
+}
+.kpi-trend {
+  font-size: 12px;
+  color: var(--text-gray);
+}
+
+/* TIMELINE / AUTOMATION FLOW */
+.flow-timeline {
+  position: relative;
+  padding-left: 32px;
+}
+.flow-timeline::before {
+  content: '';
+  position: absolute;
+  left: 12px;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: linear-gradient(180deg, var(--purple-bright), transparent);
+}
+.flow-step {
+  position: relative;
+  padding: 16px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin-bottom: 16px;
+}
+.flow-step::before {
+  content: '';
+  position: absolute;
+  left: -25px;
+  top: 24px;
+  width: 12px;
+  height: 12px;
+  background: var(--purple-bright);
+  border-radius: 50%;
+  box-shadow: 0 0 12px var(--purple-bright);
+  border: 2px solid var(--bg-base);
+}
+.flow-time {
+  font-family: 'Space Grotesk', monospace;
+  font-size: 11px;
+  color: var(--purple-bright);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 6px;
+}
+.flow-action {
+  font-size: 14px;
+  color: var(--text-soft);
+  margin-bottom: 4px;
+}
+.flow-channels {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+.flow-channel {
+  font-size: 10px;
+  padding: 3px 8px;
+  background: rgba(139, 92, 246, 0.15);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--purple-bright);
+}
+
+/* LANDING PAGE STRUCTURE PREVIEW */
+.landing-blueprint {
+  background: rgba(15, 8, 30, 0.7);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 8px;
+  font-family: 'Space Grotesk', monospace;
+}
+.lp-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: all 0.3s;
+}
+.lp-section:hover {
+  background: rgba(139, 92, 246, 0.08);
+  border-color: var(--purple-bright);
+}
+.lp-num {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--purple-bright);
+  width: 42px;
+  text-align: center;
+}
+.lp-content { flex: 1; }
+.lp-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-white);
+  margin-bottom: 2px;
+}
+.lp-purpose {
+  font-size: 12px;
+  color: var(--text-gray);
+}
+
+/* QUOTES (headline examples) */
+.headline-example {
+  padding: 24px;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(76, 29, 149, 0.08) 100%);
+  border-left: 3px solid var(--purple-bright);
+  border-radius: 8px;
+  margin: 16px 0;
+  font-family: 'Inter', sans-serif;
+  font-style: italic;
+  font-size: 17px;
+  color: var(--text-white);
+  font-weight: 500;
+  line-height: 1.5;
+}
+.headline-example::before {
+  content: '"';
+  font-size: 40px;
+  color: var(--purple-bright);
+  line-height: 0;
+  vertical-align: -10px;
+  margin-right: 4px;
+}
+
+/* CTA FINAL */
+.cta-final {
+  max-width: 900px;
+  margin: 80px auto 0;
+  padding: 60px 40px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-bright);
+  border-radius: 24px;
+  text-align: center;
+  backdrop-filter: blur(20px);
+  position: relative;
+  overflow: hidden;
+}
+.cta-final::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.1) 0%, transparent 50%);
+  animation: pulse-bg 8s ease-in-out infinite;
+}
+@keyframes pulse-bg {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+.cta-final > * { position: relative; z-index: 1; }
+.cta-final h2 {
+  font-size: 40px;
+  margin-bottom: 16px;
+}
+.cta-final p {
+  color: var(--text-gray);
+  font-size: 16px;
+  max-width: 540px;
+  margin: 0 auto 32px;
+}
+.cta-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* FOOTER */
+footer {
+  padding: 40px 32px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 13px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .persona-card { grid-template-columns: 1fr; text-align: center; }
+  .persona-avatar { margin: 0 auto; }
+  .funnel-stage { grid-template-columns: 1fr; text-align: center; }
+  .funnel-stage-1, .funnel-stage-2, .funnel-stage-3, .funnel-stage-4 { width: 100%; }
+  .section-header { flex-direction: column; align-items: flex-start; }
+  header { padding: 16px 20px; }
+  .header-tag { display: none; }
+  .hero-stats { gap: 24px; }
+  .stat-value { font-size: 28px; }
+  .cta-final { padding: 40px 24px; }
+  .cta-final h2 { font-size: 28px; }
+  .form-navigation { flex-direction: column-reverse; }
+  .form-navigation .btn { max-width: 100%; }
+}
+
+/* PRINT styles */
+@media print {
+  .bg-glow-orbs, .bg-noise, header, .cta-final { display: none; }
+  body { background: white; color: black; }
+  .card, .chart-card { border: 1px solid #ddd; background: white; }
+}
+</style>
+</head>
+<body>
+
+<!-- Background atmosférico -->
+<div class="bg-atmosphere"></div>
+<div class="bg-noise"></div>
+<div class="bg-glow-orbs">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="logo-moove" onclick="resetApp()">
+      <img src="assets/logo-moove.png" alt="Moove">
+    </div>
+    <div class="header-tag">Growth Analyzer</div>
+  </div>
+</header>
+
+<!-- ============================================================
+     HERO
+============================================================ -->
+<section class="hero" id="hero">
+  <div class="hero-content">
+    <div class="eyebrow">Análise estratégica de growth</div>
+    <h1>
+      <span class="line">Transforme seu infoproduto</span>
+      <span class="line gradient-text">em uma máquina de vendas</span>
+    </h1>
+    <p class="hero-subtitle">
+      Responda algumas perguntas sobre seu produto e nossa engine de growth gera, em segundos, um plano completo: persona, funil, tráfego, automação e KPIs prontos para execução.
+    </p>
+
+    <button class="btn btn-primary btn-large" onclick="startAnalysis()">
+      <span>Começar Análise Gratuita
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </span>
+    </button>
+
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-value">7</div>
+        <div class="stat-label">Pilares Analisados</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">60s</div>
+        <div class="stat-label">Para Receber o Plano</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">100%</div>
+        <div class="stat-label">Customizado p/ você</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     ANALYZER (Form Multi-Step)
+============================================================ -->
+<section class="analyzer" id="analyzer">
+  <div class="analyzer-container">
+
+    <!-- Progress -->
+    <div class="progress-bar">
+      <div class="progress-step active" data-step="1"></div>
+      <div class="progress-step" data-step="2"></div>
+      <div class="progress-step" data-step="3"></div>
+      <div class="progress-step" data-step="4"></div>
+      <div class="progress-step" data-step="5"></div>
+    </div>
+
+    <!-- STEP 1 -->
+    <div class="form-step active" data-step="1">
+      <div class="step-header">
+        <div class="step-number">PASSO 01 / 05</div>
+        <h2 class="step-title">Sobre o seu infoproduto</h2>
+        <p class="step-description">Vamos começar pelo básico para entender o que você vende.</p>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Nome do produto <span class="required">*</span></label>
+        <input type="text" class="form-input" id="productName" placeholder="Ex: Curso de Pré-Cálculo Definitivo" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Descrição rápida (transformação prometida) <span class="required">*</span></label>
+        <textarea class="form-textarea" id="productDesc" placeholder="Ex: Curso que reconstrói as bases de matemática do ensino médio em 30 dias para quem vai cursar engenharia"></textarea>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="form-step" data-step="2">
+      <div class="step-header">
+        <div class="step-number">PASSO 02 / 05</div>
+        <h2 class="step-title">Qual o nicho?</h2>
+        <p class="step-description">Selecione a categoria que melhor descreve seu produto.</p>
+      </div>
+
+      <div class="option-grid" id="nichoGrid">
+        <div class="option-card" data-value="educacao_exatas">
+          <div class="option-title">Educação / Exatas</div>
+          <div class="option-desc">Pré-cálculo, programação, concursos técnicos</div>
+        </div>
+        <div class="option-card" data-value="idiomas">
+          <div class="option-title">Idiomas</div>
+          <div class="option-desc">Inglês, espanhol, fluência, conversação</div>
+        </div>
+        <div class="option-card" data-value="concursos">
+          <div class="option-title">Concursos / ENEM</div>
+          <div class="option-desc">Preparatórios, OAB, vestibulares</div>
+        </div>
+        <div class="option-card" data-value="profissionalizante">
+          <div class="option-title">Profissionalizante</div>
+          <div class="option-desc">Marketing, design, vendas, negócios</div>
+        </div>
+        <div class="option-card" data-value="beleza">
+          <div class="option-title">Beleza / Estética</div>
+          <div class="option-desc">Maquiagem, depilação, design de sobrancelha</div>
+        </div>
+        <div class="option-card" data-value="saude_fitness">
+          <div class="option-title">Saúde / Fitness</div>
+          <div class="option-desc">Emagrecimento, treinos, nutrição</div>
+        </div>
+        <div class="option-card" data-value="desenvolvimento">
+          <div class="option-title">Desenvolvimento Pessoal</div>
+          <div class="option-desc">Mindset, produtividade, espiritualidade</div>
+        </div>
+        <div class="option-card" data-value="outros">
+          <div class="option-title">Outros nichos</div>
+          <div class="option-desc">Culinária, hobbies, especializados</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="form-step" data-step="3">
+      <div class="step-header">
+        <div class="step-number">PASSO 03 / 05</div>
+        <h2 class="step-title">Modelo de comercialização</h2>
+        <p class="step-description">Como você planeja vender este produto?</p>
+      </div>
+
+      <div class="option-grid" id="modeloGrid">
+        <div class="option-card" data-value="perpetuo">
+          <div class="option-title">Perpétuo (Evergreen)</div>
+          <div class="option-desc">Vendas contínuas via tráfego pago e funil automático</div>
+        </div>
+        <div class="option-card" data-value="lancamento">
+          <div class="option-title">Lançamento</div>
+          <div class="option-desc">CPL, evento ao vivo, abertura/fechamento de carrinho</div>
+        </div>
+        <div class="option-card" data-value="hibrido">
+          <div class="option-title">Híbrido (LIP)</div>
+          <div class="option-desc">Funil perpétuo + lançamentos cíclicos</div>
+        </div>
+        <div class="option-card" data-value="assinatura">
+          <div class="option-title">Assinatura</div>
+          <div class="option-desc">Membership recorrente mensal/anual</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="form-step" data-step="4">
+      <div class="step-header">
+        <div class="step-number">PASSO 04 / 05</div>
+        <h2 class="step-title">Faixa de preço do produto</h2>
+        <p class="step-description">Quanto você cobra (ou pretende cobrar) pelo infoproduto?</p>
+      </div>
+
+      <div class="option-grid" id="ticketGrid">
+        <div class="option-card" data-value="low">
+          <div class="option-title">Low Ticket</div>
+          <div class="option-desc">Até R$ 297 — alta escala, tráfego frio direto</div>
+        </div>
+        <div class="option-card" data-value="mid">
+          <div class="option-title">Mid Ticket</div>
+          <div class="option-desc">R$ 297 a R$ 1.997 — exige aquecimento</div>
+        </div>
+        <div class="option-card" data-value="high">
+          <div class="option-title">High Ticket</div>
+          <div class="option-desc">R$ 1.997 a R$ 4.997 — VSL longo + prova social</div>
+        </div>
+        <div class="option-card" data-value="premium">
+          <div class="option-title">Premium</div>
+          <div class="option-desc">Acima de R$ 4.997 — venda consultiva</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 5 -->
+    <div class="form-step" data-step="5">
+      <div class="step-header">
+        <div class="step-number">PASSO 05 / 05</div>
+        <h2 class="step-title">Orçamento mensal de marketing</h2>
+        <p class="step-description">Quanto você consegue investir em tráfego pago e ferramentas por mês?</p>
+      </div>
+
+      <div class="option-grid" id="budgetGrid">
+        <div class="option-card" data-value="750">
+          <div class="option-title">R$ 500 a R$ 1.000</div>
+          <div class="option-desc">Primeiros testes e validação</div>
+        </div>
+        <div class="option-card" data-value="1750">
+          <div class="option-title">R$ 1.500 a R$ 2.000</div>
+          <div class="option-desc">Validação com budget enxuto</div>
+        </div>
+        <div class="option-card" data-value="2750">
+          <div class="option-title">R$ 2.500 a R$ 3.000</div>
+          <div class="option-desc">Crescimento inicial</div>
+        </div>
+        <div class="option-card" data-value="3750">
+          <div class="option-title">R$ 3.500 a R$ 4.000</div>
+          <div class="option-desc">Operação em tração</div>
+        </div>
+        <div class="option-card" data-value="4750">
+          <div class="option-title">R$ 4.500 a R$ 5.000</div>
+          <div class="option-desc">Crescimento estruturado</div>
+        </div>
+        <div class="option-card" data-value="5500">
+          <div class="option-title">R$ 5k a R$ 6.000</div>
+          <div class="option-desc">Operação consolidada com escala</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-navigation">
+      <button class="btn btn-secondary" id="prevBtn" onclick="prevStep()" style="visibility:hidden;">← Voltar</button>
+      <button class="btn btn-primary" id="nextBtn" onclick="nextStep()">
+        <span>Próximo →</span>
+      </button>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================================================
+     LOADING
+============================================================ -->
+<div class="loading-screen" id="loadingScreen">
+  <div class="loading-logo-anim">
+    <div class="loading-loop"></div>
+  </div>
+  <div class="loading-title">Gerando seu plano de growth...</div>
+  <div class="loading-status" id="loadingStatus">Inicializando engine</div>
+
+  <div class="loading-steps">
+    <div class="loading-step-item" data-step="1">
+      <div class="check">○</div>
+      <span>Mapeando público-alvo e dores críticas</span>
+    </div>
+    <div class="loading-step-item" data-step="2">
+      <div class="check">○</div>
+      <span>Construindo persona detalhada</span>
+    </div>
+    <div class="loading-step-item" data-step="3">
+      <div class="check">○</div>
+      <span>Desenhando funil de jornada</span>
+    </div>
+    <div class="loading-step-item" data-step="4">
+      <div class="check">○</div>
+      <span>Calculando distribuição de tráfego pago</span>
+    </div>
+    <div class="loading-step-item" data-step="5">
+      <div class="check">○</div>
+      <span>Estruturando automação e KPIs</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     RESULTS DASHBOARD
+============================================================ -->
+<section class="results" id="results">
+
+  <div class="results-header">
+    <div class="eyebrow">Análise pronta</div>
+    <h2>Seu <span class="gradient-text">plano de guerra</span></h2>
+    <p>Plano completo gerado com base nas melhores práticas Moove para o seu nicho, modelo e ticket.</p>
+  </div>
+
+  <!-- PRODUCT CARD -->
+  <div class="product-card" id="productCard">
+    <div class="product-card-header">
+      <div>
+        <div class="product-name" id="resultProductName">—</div>
+        <div class="product-tags" id="resultTags"></div>
+      </div>
+      <button class="btn btn-secondary" onclick="window.print()">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="6 9 6 2 18 2 18 9"/>
+          <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+          <rect x="6" y="14" width="12" height="8"/>
+        </svg>
+        Imprimir
+      </button>
+    </div>
+    <p class="product-summary" id="resultSummary"></p>
+  </div>
+
+  <!-- SECTION 1: PERSONA -->
+  <div class="result-section">
+    <div class="section-header">
+      <div class="section-number">01</div>
+      <div class="section-title-block">
+        <h3 class="section-title">Persona / ICP</h3>
+        <p class="section-description">O avatar exato do seu comprador ideal</p>
+      </div>
+    </div>
+
+    <div class="card persona-card" id="personaCard">
+      <div class="persona-avatar" id="personaAvatar">L</div>
+      <div class="persona-info">
+        <h3 id="personaName">—</h3>
+        <div class="persona-subtitle" id="personaTitle">—</div>
+        <p id="personaBio" style="color: var(--text-gray); font-size: 14px;"></p>
+        <div class="persona-attributes" id="personaAttrs"></div>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-top: 24px;">
+      <div class="card">
+        <div class="card-title"><div class="dot"></div>Dores críticas</div>
+        <ul class="bullet-list" id="personaDores"></ul>
+      </div>
+      <div class="card">
+        <div class="card-title"><div class="dot"></div>Desejos & transformação</div>
+        <ul class="bullet-list" id="personaDesejos"></ul>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top: 24px;">
+      <div class="card-title"><div class="dot"></div>Objeções secretas de compra</div>
+      <ul class="bullet-list" id="personaObjecoes"></ul>
+    </div>
+  </div>
+
+  <!-- SECTION 2: JORNADA / FUNIL -->
+  <div class="result-section">
+    <div class="section-header">
+      <div class="section-number">02</div>
+      <div class="section-title-block">
+        <h3 class="section-title">Jornada de compra</h3>
+        <p class="section-description">Funil completo do desconhecido ao comprador</p>
+      </div>
+    </div>
+
+    <div class="funnel-container" id="funnelContainer"></div>
+  </div>
+
+  <!-- SECTION 3: CAPTURA DE LEADS -->
+  <div class="result-section">
+    <div class="section-header">
+      <div class="section-number">03</div>
+      <div class="section-title-block">
+        <h3 class="section-title">Estratégia de captação</h3>
+        <p class="section-description">O ímã digital que vai gerar leads qualificados</p>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title"><div class="dot"></div>Isca digital recomendada</div>
+        <div id="iscaA"></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><div class="dot"></div>Headline da landing page</div>
+        <div id="lpHeadline"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4: PAGINA DE VENDAS -->
+  <div class="result-section">
+    <div class="section-header">
+      <div class="section-number">04</div>
+      <div class="section-title-block">
+        <h3 class="section-title">Arquitetura da página de vendas</h3>
+        <p class="section-description">Estrutura seção a seção em ordem de conversão</p>
+      </div>
+    </div>
+
+    <div class="landing-blueprint" id="landingBlueprint"></div>
+  </div>
+
+  <!-- SECTION 5: TRÁFEGO PAGO -->
+  <div class="result-section">
+    <div class="section-header">
+      <div class="section-number">05</div>
+      <div class="section-title-block">
+        <h3 class="section-title">Tráfego pago</h3>
+        <p class="section-description">Distribuição de verba, campanhas e metas</p>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="chart-card">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">Distribuição de verba</div>
+            <div class="chart-subtitle" id="budgetSubtitle">Mensal</div>
+          </div>
+        </div>
+        <div class="chart-container">
+          <canvas id="budgetChart"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">Projeção de crescimento</div>
+            <div class="chart-subtitle">Vendas estimadas — 90 dias</div>
+          </div>
+        </div>
+        <div class="chart-container">
+          <canvas id="growthChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-wrapper" style="margin-top: 24px;">
+      <table class="data-table" id="campaignTable">
+        <thead>
+          <tr>
+            <th>Campanha</th>
+            <th>Objetivo</th>
+            <th>Público</th>
+            <th>Investimento</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="grid-4" style="margin-top: 24px;" id="kpiGrid"></div>
+  </div>
+
+  <!-- SECTION 6: CONTEUDO ORGÂNICO -->
+  <div class="result-section">
+    <div class="section-header">
+      <div class="section-number">06</div>
+      <div class="section-title-block">
+        <h3 class="section-title">Tráfego orgânico & conteúdo</h3>
+        <p class="section-description">Pilares editoriais e funil de conteúdo</p>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="chart-card">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">Mix de pilares editoriais</div>
+            <div class="chart-subtitle">Distribuição recomendada</div>
+          </div>
+        </div>
+        <div class="chart-container">
+          <canvas id="contentChart"></canvas>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><div class="dot"></div>Exemplos práticos de posts</div>
+        <div id="contentExamples"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 7: AUTOMAÇÃO -->
+  <div class="result-section">
+    <div class="section-header">
+      <div class="section-number">07</div>
+      <div class="section-title-block">
+        <h3 class="section-title">Automação & recuperação</h3>
+        <p class="section-description">Fluxos de nutrição, carrinho e relacionamento</p>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title"><div class="dot"></div>Fluxo de nutrição pós-captura</div>
+        <div class="flow-timeline" id="nurtureFlow"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><div class="dot"></div>Recuperação de carrinho</div>
+        <div class="flow-timeline" id="cartFlow"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA FINAL -->
+  <div class="cta-final">
+    <div class="eyebrow" style="justify-content: center;">Pronto para executar?</div>
+    <h2>Quer transformar este plano em <span class="gradient-text">faturamento real?</span></h2>
+    <p>Nosso time de growth da Moove pode tirar este plano do papel — gestão, tráfego, criativos, landing pages, dashboards e sistemas sob medida.</p>
+    <div class="cta-actions">
+      <button class="btn btn-primary btn-large" onclick="alert('Em produção: este botão abriria o formulário de contato da Moove.')">
+        <span>Falar com um especialista
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </span>
+      </button>
+      <button class="btn btn-secondary btn-large" onclick="resetApp()">↺ Nova análise</button>
+    </div>
+  </div>
+
+</section>
+
+<footer>
+  <div>© <span id="year"></span> Moove · Growth Predictable · Análise gerada por engine proprietária</div>
+</footer>
+
+<script>
+/* ============================================================
+   ENGINE DE ANÁLISE — MOOVE GROWTH ANALYZER
+============================================================ */
+
+document.getElementById('year').textContent = new Date().getFullYear();
+
+// ============================================================
+// STATE
+// ============================================================
+const state = {
+  currentStep: 1,
+  totalSteps: 5,
+  data: {
+    productName: '',
+    productDesc: '',
+    nicho: '',
+    modelo: '',
+    ticket: '',
+    budget: ''
+  }
+};
+
+// ============================================================
+// NICHOS — banco de dados por nicho
+// ============================================================
+const NICHOS = {
+  educacao_exatas: {
+    label: 'Educação / Exatas',
+    persona: {
+      name: 'Lucas Andrade',
+      title: 'O calouro ameaçado de reprovação',
+      avatar: 'L',
+      age: '19 anos',
+      occupation: 'Estudante de Engenharia (2º semestre)',
+      income: 'R$ 3.000 a R$ 6.000 (família)',
+      location: 'Interior ou capital do interior',
+      bio: 'Vem de escola pública, está perdido nas matérias do ciclo básico e tem medo real de reprovar e atrasar a formatura ou perder bolsa/FIES.',
+      channels: 'YouTube · TikTok · WhatsApp · Reddit'
+    },
+    dores: [
+      'Não entende nada quando o professor escreve no quadro',
+      'Já assistiu dezenas de vídeos no YouTube e continua perdido',
+      'Sente vergonha da base fraca do ensino médio',
+      'Tem medo de reprovar e atrasar a formatura',
+      'Se compara aos colegas e se sente o "burro" da turma'
+    ],
+    desejos: [
+      'Passar em Cálculo 1 de primeira sem DP',
+      'Sentir-se inteligente e confiante na aula',
+      'Resolver lista de exercícios sem travar',
+      'Orgulhar a família e terminar no prazo',
+      'Ser o aluno que os colegas pedem ajuda'
+    ],
+    objecoes: [
+      '"Será que esse curso é só mais uma enganação?"',
+      '"Tem tudo de graça no YouTube, por que pagar?"',
+      '"Não vou ter disciplina, vou pagar e não vou assistir"',
+      '"E se eu não conseguir aprender mesmo assim?"',
+      '"Meus pais vão achar caro"'
+    ],
+    headline: 'Do ZERO ao Cálculo em 30 dias: o método que está aprovando calouros mesmo quem "nunca foi bom em matemática"',
+    iscaTitle: 'Quiz: você está pronto para Cálculo 1?',
+    iscaDesc: 'Teste em 7 perguntas + diagnóstico personalizado + roteiro dos 9 tópicos essenciais.',
+    pilares: {
+      'Dor & Identificação': 40,
+      'Autoridade Técnica': 35,
+      'Prova Social': 25
+    },
+    contentExamples: [
+      { tipo: 'Topo', text: '"POV: o professor escreve isso no quadro e você percebe que não sabe nem o que é uma função 😱"' },
+      { tipo: 'Meio', text: '"Por que 70% dos calouros reprovam em Cálculo 1 (e a culpa NÃO é sua)"' },
+      { tipo: 'Fundo', text: '"Conheça a Beatriz: tirou 2,5 e depois 8,7 após o método"' }
+    ]
+  },
+  idiomas: {
+    label: 'Idiomas',
+    persona: {
+      name: 'Carla Mendes',
+      title: 'A profissional travada no inglês',
+      avatar: 'C',
+      age: '28 anos',
+      occupation: 'Analista corporativa',
+      income: 'R$ 4.000 a R$ 8.000',
+      location: 'Grandes capitais',
+      bio: 'Estuda inglês há anos sem fluência, perdeu promoções por causa do idioma e congela em qualquer call internacional.',
+      channels: 'Instagram · LinkedIn · YouTube · Spotify'
+    },
+    dores: [
+      'Estuda inglês há anos e continua sem conseguir conversar',
+      'Trava completamente em call de trabalho em inglês',
+      'Perdeu promoção/vaga por causa do idioma',
+      'Tem medo do julgamento ao falar errado',
+      'Já comprou outros cursos e não terminou nenhum'
+    ],
+    desejos: [
+      'Conseguir uma conversa fluente em 30 dias',
+      'Liderar reunião internacional sem ansiedade',
+      'Conquistar promoção ou vaga internacional',
+      'Viajar com autonomia sem depender de tradutor',
+      'Ter orgulho de falar em inglês'
+    ],
+    objecoes: [
+      '"Já gastei muito dinheiro em curso, não funcionou"',
+      '"Não tenho tempo para estudar todos os dias"',
+      '"Minha pronúncia é horrível, vão rir de mim"',
+      '"Sou velho demais para aprender agora"',
+      '"E se eu não conseguir falar em 30 dias?"'
+    ],
+    headline: 'Fluência em 90 dias: o método que está fazendo profissionais brasileiros liderarem calls internacionais sem travar',
+    iscaTitle: 'Aula gratuita: 3 erros que travam sua fluência',
+    iscaDesc: 'Descubra por que você ainda não fala inglês e o que fazer para destravar em 30 dias.',
+    pilares: {
+      'Dor & Identificação': 35,
+      'Autoridade & Método': 35,
+      'Prova Social': 30
+    },
+    contentExamples: [
+      { tipo: 'Topo', text: '"POV: você marca a call em inglês e fica enjoado o dia inteiro"' },
+      { tipo: 'Meio', text: '"Os 3 erros que travam sua fluência (mesmo estudando todo dia)"' },
+      { tipo: 'Fundo', text: '"Marcos, gerente, conquistou cargo internacional em 5 meses"' }
+    ]
+  },
+  concursos: {
+    label: 'Concursos / ENEM',
+    persona: {
+      name: 'Rafael Souza',
+      title: 'O concurseiro determinado',
+      avatar: 'R',
+      age: '26 anos',
+      occupation: 'Concurseiro em tempo integral / CLT desmotivado',
+      income: 'R$ 2.500 a R$ 5.000',
+      location: 'Em todo o Brasil',
+      bio: 'Estuda há 2-4 anos para concursos públicos, já reprovou em algumas provas e busca o método "definitivo" para aprovação.',
+      channels: 'YouTube · Telegram · Direção Concursos'
+    },
+    dores: [
+      'Estuda há anos sem aprovação',
+      'Reprovou em provas com menos de 1 ponto da nota de corte',
+      'Não consegue manter consistência na rotina de estudo',
+      'Pressão familiar para "arrumar emprego de verdade"',
+      'Medo de ficar velho sem nunca passar'
+    ],
+    desejos: [
+      'Aprovação no concurso dos sonhos',
+      'Estabilidade financeira para sempre',
+      'Orgulho da família ao tomar posse',
+      'Salário inicial de R$ 8k+',
+      'Sair da rotina CLT exaustiva'
+    ],
+    objecoes: [
+      '"Já comprei vários cursos, nenhum me levou à aprovação"',
+      '"O preço é caro pra quem está estudando sem renda"',
+      '"E se eu não passar mesmo com o curso?"',
+      '"Esse método funciona pra TODOS os concursos?"',
+      '"Não tenho disciplina suficiente"'
+    ],
+    headline: 'O método dos aprovados: como passar no concurso dos sonhos em menos de 12 meses (mesmo trabalhando CLT)',
+    iscaTitle: 'PDF: cronograma de estudos dos aprovados',
+    iscaDesc: 'Receba o cronograma exato usado pelos top 1% de aprovados nos últimos concursos federais.',
+    pilares: {
+      'Aprovação & Casos Reais': 40,
+      'Técnica & Estudo': 35,
+      'Motivação': 25
+    },
+    contentExamples: [
+      { tipo: 'Topo', text: '"Sinais de que você NUNCA vai passar no concurso (e como reverter)"' },
+      { tipo: 'Meio', text: '"O ciclo de estudos dos aprovados — passo a passo"' },
+      { tipo: 'Fundo', text: '"Carla saiu do CLT e foi aprovada no INSS em 8 meses"' }
+    ]
+  },
+  profissionalizante: {
+    label: 'Profissionalizante',
+    persona: {
+      name: 'Bruno Silva',
+      title: 'O profissional em transição de carreira',
+      avatar: 'B',
+      age: '32 anos',
+      occupation: 'Profissional CLT insatisfeito',
+      income: 'R$ 4.000 a R$ 10.000',
+      location: 'Grandes centros',
+      bio: 'Cansou da rotina CLT e quer mudar de carreira / começar negócio próprio em uma área de alta demanda no mercado digital.',
+      channels: 'LinkedIn · Instagram · YouTube'
+    },
+    dores: [
+      'Está estagnado na carreira atual',
+      'Salário não acompanha custo de vida',
+      'Vê pessoas ganhando 5x mais em outras áreas',
+      'Tem medo de começar do zero',
+      'Sente que está perdendo tempo no CLT'
+    ],
+    desejos: [
+      'Triplicar a renda em até 12 meses',
+      'Trabalhar de qualquer lugar',
+      'Liberdade financeira e de horário',
+      'Construir negócio próprio sólido',
+      'Sair do CLT com segurança'
+    ],
+    objecoes: [
+      '"Tenho família para sustentar, é arriscado"',
+      '"Não tenho experiência nessa nova área"',
+      '"E se o mercado saturar?"',
+      '"O preço do curso é alto para alguém endividado"',
+      '"Vou conseguir aprender o suficiente em poucos meses?"'
+    ],
+    headline: 'Do CLT à liberdade: a profissão digital que está pagando R$ 8k a R$ 30k mensais em 2026',
+    iscaTitle: 'Mapa: as 5 profissões digitais que mais pagam em 2026',
+    iscaDesc: 'PDF + aula com os caminhos completos de cada profissão e quanto cada uma paga no início.',
+    pilares: {
+      'Oportunidade de Mercado': 35,
+      'Casos de Sucesso': 35,
+      'Método & Bastidores': 30
+    },
+    contentExamples: [
+      { tipo: 'Topo', text: '"5 profissões que estão pagando R$ 15k+ em 2026 (e ninguém te contou)"' },
+      { tipo: 'Meio', text: '"Por que CLT virou o pior investimento dos últimos 10 anos"' },
+      { tipo: 'Fundo', text: '"Aluno saiu de R$ 3k CLT para R$ 22k em 7 meses como [profissão]"' }
+    ]
+  },
+  beleza: {
+    label: 'Beleza / Estética',
+    persona: {
+      name: 'Juliana Costa',
+      title: 'A profissional da beleza ambiciosa',
+      avatar: 'J',
+      age: '27 anos',
+      occupation: 'Esteticista / Designer de sobrancelhas iniciante',
+      income: 'R$ 2.500 a R$ 6.000',
+      location: 'Interior + grandes cidades',
+      bio: 'Quer dominar uma técnica específica para aumentar ticket e clientela, sonha em ter agenda lotada e seu próprio espaço.',
+      channels: 'Instagram · TikTok · Pinterest'
+    },
+    dores: [
+      'Cobra barato e mesmo assim a agenda não enche',
+      'Vê outras profissionais cobrando 3x mais com agenda lotada',
+      'Não consegue captar clientes via redes sociais',
+      'Trabalha muitas horas e ganha pouco',
+      'Sente insegurança nas técnicas que aprendeu'
+    ],
+    desejos: [
+      'Agenda lotada 30 dias antecipados',
+      'Cobrar ticket premium (R$ 200-500/serviço)',
+      'Ter espaço próprio referência na cidade',
+      'Posicionar-se como autoridade local',
+      'Ter freedom financeira'
+    ],
+    objecoes: [
+      '"Já fiz vários cursos e nenhum mudou meu faturamento"',
+      '"Não sei se vou conseguir aplicar na minha cidade"',
+      '"Minha clientela não paga caro"',
+      '"E se eu não tiver clientes para aplicar a técnica?"',
+      '"O curso é caro para o meu momento"'
+    ],
+    headline: 'A técnica que está fazendo esteticistas dobrarem o ticket e lotarem a agenda em 60 dias',
+    iscaTitle: 'Mini-curso: como dobrar seu faturamento na estética',
+    iscaDesc: '3 aulas gratuitas com o método de precificação e captação que mudou a vida de 1.200 profissionais.',
+    pilares: {
+      'Antes & Depois (Técnica)': 40,
+      'Posicionamento & Marketing': 30,
+      'Bastidores & Lifestyle': 30
+    },
+    contentExamples: [
+      { tipo: 'Topo', text: '"Você está cobrando barato sem saber? Faça este teste"' },
+      { tipo: 'Meio', text: '"3 motivos pelos quais sua agenda não enche (mesmo postando todo dia)"' },
+      { tipo: 'Fundo', text: '"Resultado real: aluna saiu de R$ 2k para R$ 12k em 4 meses"' }
+    ]
+  },
+  saude_fitness: {
+    label: 'Saúde / Fitness',
+    persona: {
+      name: 'Patrícia Lima',
+      title: 'A mulher que quer recuperar o corpo',
+      avatar: 'P',
+      age: '34 anos',
+      occupation: 'Mãe / profissional rotina corrida',
+      income: 'R$ 3.500 a R$ 8.000',
+      location: 'Em todo Brasil',
+      bio: 'Engordou após filho/pandemia, tentou várias dietas sem sucesso, busca um método que se encaixe na rotina sem se sentir privada.',
+      channels: 'Instagram · TikTok · YouTube'
+    },
+    dores: [
+      'Engordou bastante e não consegue mais perder',
+      'Tentou várias dietas e nenhuma funcionou a longo prazo',
+      'Não tem tempo para academia 1h/dia',
+      'Sente-se mal nas fotos, evita espelho',
+      'Saúde piorando (colesterol, pressão)'
+    ],
+    desejos: [
+      'Perder 10kg+ em até 4 meses',
+      'Caber nas roupas antigas',
+      'Ter disposição para brincar com os filhos',
+      'Sentir-se atraente novamente',
+      'Saúde sólida e exames bons'
+    ],
+    objecoes: [
+      '"Toda dieta que faço, recupero o peso depois"',
+      '"Não tenho disciplina para mudar"',
+      '"E se for mais um método que não funciona?"',
+      '"Não vou ter tempo na minha rotina"',
+      '"Preciso passar fome para emagrecer?"'
+    ],
+    headline: 'O método que está fazendo mulheres acima dos 30 emagrecerem 10kg sem dieta restritiva nem academia',
+    iscaTitle: 'PDF: 7 dias do cardápio que destrava o emagrecimento',
+    iscaDesc: 'Plano alimentar gratuito + vídeo com os 3 erros que sabotam sua perda de peso.',
+    pilares: {
+      'Antes & Depois': 40,
+      'Educação Nutricional': 30,
+      'Bastidores & Realidade': 30
+    },
+    contentExamples: [
+      { tipo: 'Topo', text: '"3 hábitos que estão ENGORDANDO você (e você nem sabe)"' },
+      { tipo: 'Meio', text: '"Por que dietas restritivas SEMPRE falham a longo prazo"' },
+      { tipo: 'Fundo', text: '"Camila perdeu 14kg em 3 meses sem academia (veja o antes e depois)"' }
+    ]
+  },
+  desenvolvimento: {
+    label: 'Desenvolvimento Pessoal',
+    persona: {
+      name: 'Diego Almeida',
+      title: 'O profissional buscando propósito',
+      avatar: 'D',
+      age: '30 anos',
+      occupation: 'Profissional liberal / empreendedor',
+      income: 'R$ 5.000 a R$ 15.000',
+      location: 'Grandes centros',
+      bio: 'Tem boa carreira mas sente vazio, busca clareza de propósito, produtividade real e equilíbrio mental para escalar resultados.',
+      channels: 'Instagram · YouTube · Podcasts · LinkedIn'
+    },
+    dores: [
+      'Procrastina mesmo sabendo o que precisa fazer',
+      'Sente-se ansioso e disperso o tempo todo',
+      'Não tem clareza de próximos passos',
+      'Cansaço crônico, mesmo dormindo bem',
+      'Compara-se constantemente com outros'
+    ],
+    desejos: [
+      'Clareza total de propósito e direção',
+      'Foco profundo de 4-8h por dia',
+      'Confiança imbatível em decisões',
+      'Equilíbrio entre alta performance e bem-estar',
+      'Resultados extraordinários na carreira/negócio'
+    ],
+    objecoes: [
+      '"Já li vários livros, nada mudou de verdade"',
+      '"Coaching/curso de mindset é furada"',
+      '"Não tenho tempo para mais um curso"',
+      '"E se for só motivação vazia?"',
+      '"Vou conseguir aplicar de verdade?"'
+    ],
+    headline: 'O método de alta performance que está fazendo profissionais brasileiros dobrarem resultados trabalhando MENOS horas',
+    iscaTitle: 'Workshop gratuito: o ciclo da alta performance',
+    iscaDesc: '3 dias intensivos com o framework que organiza foco, energia e tempo para resultados 10x maiores.',
+    pilares: {
+      'Mentalidade & Filosofia': 35,
+      'Métodos Práticos': 35,
+      'Bastidores & Cases': 30
+    },
+    contentExamples: [
+      { tipo: 'Topo', text: '"5 hábitos que sabotam sua produtividade silenciosamente"' },
+      { tipo: 'Meio', text: '"Por que profissionais top trabalham 4h por dia (e produzem mais)"' },
+      { tipo: 'Fundo', text: '"Como Bruno triplicou faturamento trabalhando metade das horas"' }
+    ]
+  },
+  outros: {
+    label: 'Nicho Especializado',
+    persona: {
+      name: 'Alex Pereira',
+      title: 'O entusiasta apaixonado',
+      avatar: 'A',
+      age: '32 anos',
+      occupation: 'Profissional / hobbysta dedicado',
+      income: 'R$ 3.000 a R$ 10.000',
+      location: 'Em todo Brasil',
+      bio: 'Está envolvido com o tema há tempos, busca aprofundar conhecimento ou monetizar a paixão, valoriza qualidade técnica.',
+      channels: 'YouTube · Comunidades · Instagram'
+    },
+    dores: [
+      'Conteúdo solto na internet, sem direção clara',
+      'Não acha mentor ou referência sólida no nicho',
+      'Estagnou na evolução do tema',
+      'Sente-se sozinho na jornada',
+      'Quer monetizar mas não sabe como começar'
+    ],
+    desejos: [
+      'Dominar o tema em nível profissional',
+      'Conectar-se com comunidade séria',
+      'Monetizar a paixão / virar referência',
+      'Ter clareza do caminho de evolução',
+      'Sentir orgulho do nível alcançado'
+    ],
+    objecoes: [
+      '"Não sei se vale a pena pagar por isso"',
+      '"Posso aprender no YouTube de graça"',
+      '"O preço é alto pra um hobby"',
+      '"E se o conteúdo for raso?"',
+      '"Tem suporte / comunidade ativa?"'
+    ],
+    headline: 'O método completo para você dominar [tema] em poucos meses (mesmo começando do zero)',
+    iscaTitle: 'Material exclusivo: guia + aulas gratuitas',
+    iscaDesc: 'Receba o roadmap completo do nicho + 3 aulas em vídeo com os fundamentos.',
+    pilares: {
+      'Conteúdo Técnico': 40,
+      'Comunidade & Bastidores': 30,
+      'Resultados de Alunos': 30
+    },
+    contentExamples: [
+      { tipo: 'Topo', text: '"5 erros de iniciantes que travam sua evolução"' },
+      { tipo: 'Meio', text: '"O caminho completo para virar referência em [tema]"' },
+      { tipo: 'Fundo', text: '"Aluno saiu do zero ao avançado em 6 meses — veja como"' }
+    ]
+  }
+};
+
+// ============================================================
+// MODELOS DE COMERCIALIZAÇÃO
+// ============================================================
+const MODELOS = {
+  perpetuo: {
+    label: 'Perpétuo (Evergreen)',
+    description: 'Funil contínuo automatizado',
+    funnelSplit: { topo: 0.5, meio: 0.3, fundo: 0.2 },
+    kpis: { cpl: [3, 8], cpa: [80, 200], roas: [2.5, 4.0], leadToSale: [4, 8] },
+    cycle: 'Conversão em 0–30 dias',
+    nurtureDays: 7
+  },
+  lancamento: {
+    label: 'Lançamento (Fórmula)',
+    description: 'Captação intensa + abertura/fechamento de carrinho',
+    funnelSplit: { topo: 0.7, meio: 0.2, fundo: 0.1 },
+    kpis: { cpl: [2, 6], cpa: [60, 150], roas: [3.0, 5.0], leadToSale: [6, 12] },
+    cycle: 'Conversão concentrada em 7–14 dias',
+    nurtureDays: 14
+  },
+  hibrido: {
+    label: 'Híbrido (LIP)',
+    description: 'Perpétuo + lançamentos cíclicos',
+    funnelSplit: { topo: 0.55, meio: 0.25, fundo: 0.2 },
+    kpis: { cpl: [3, 7], cpa: [70, 180], roas: [2.8, 4.5], leadToSale: [5, 10] },
+    cycle: 'Conversão contínua + picos cíclicos',
+    nurtureDays: 10
+  },
+  assinatura: {
+    label: 'Assinatura / Membership',
+    description: 'Recorrência mensal/anual',
+    funnelSplit: { topo: 0.45, meio: 0.35, fundo: 0.2 },
+    kpis: { cpl: [4, 10], cpa: [100, 250], roas: [1.8, 3.5], leadToSale: [3, 6] },
+    cycle: 'Foco em retenção (LTV)',
+    nurtureDays: 5
+  }
+};
+
+// ============================================================
+// TICKETS (faixa de preço)
+// ============================================================
+const TICKETS = {
+  low: {
+    label: 'Low Ticket',
+    avgPrice: 197,
+    description: 'Até R$ 297',
+    conversionRate: 0.035,
+    paidShare: 0.85
+  },
+  mid: {
+    label: 'Mid Ticket',
+    avgPrice: 997,
+    description: 'R$ 297 a R$ 1.997',
+    conversionRate: 0.022,
+    paidShare: 0.70
+  },
+  high: {
+    label: 'High Ticket',
+    avgPrice: 2997,
+    description: 'R$ 1.997 a R$ 4.997',
+    conversionRate: 0.012,
+    paidShare: 0.55
+  },
+  premium: {
+    label: 'Premium',
+    avgPrice: 7997,
+    description: 'Acima de R$ 4.997',
+    conversionRate: 0.005,
+    paidShare: 0.40
+  }
+};
+
+// ============================================================
+// FUNNEL JORNADA (4 etapas universais)
+// ============================================================
+function buildFunnel(nicho, modelo) {
+  return [
+    {
+      icon: '01', stage: 1,
+      title: 'Aprendizado & Descoberta',
+      level: 'Topo · Inconsciente',
+      desc: 'Atrair quem ainda não sabe que tem o problema, via Reels/Shorts virais e conteúdo de impacto emocional.',
+      rate: '100%'
+    },
+    {
+      icon: '02', stage: 2,
+      title: 'Reconhecimento do Problema',
+      level: 'Meio · Consciente do Problema',
+      desc: 'Validar a dor e capturar o lead via isca digital (quiz, aula, PDF) com diagnóstico personalizado.',
+      rate: '40%'
+    },
+    {
+      icon: '03', stage: 3,
+      title: 'Consideração da Solução',
+      level: 'Meio/Fundo · Consciente da Solução',
+      desc: 'Posicionar o infoproduto como o único caminho lógico — vs. métodos grátis / concorrentes.',
+      rate: '15%'
+    },
+    {
+      icon: '04', stage: 4,
+      title: 'Decisão de Compra',
+      level: 'Fundo · Consciente do Produto',
+      desc: 'Gatilhos finais: prova social, escassez, garantia + quebra de objeções finais.',
+      rate: '5%'
+    }
+  ];
+}
+
+// ============================================================
+// CAMPANHAS DE TRÁFEGO (por modelo + ticket)
+// ============================================================
+function buildCampaigns(modelo, ticket, budget) {
+  const m = MODELOS[modelo];
+  const split = m.funnelSplit;
+  const topoBudget = Math.round(budget * split.topo);
+  const meioBudget = Math.round(budget * split.meio);
+  const fundoBudget = Math.round(budget * split.fundo);
+
+  const campaigns = [
+    {
+      name: 'Inbound · Interesses Validados',
+      objective: 'Geração de Leads',
+      audience: 'Tráfego frio · Interesses do nicho · 18–45 anos',
+      budget: Math.round(topoBudget * 0.55)
+    },
+    {
+      name: 'Inbound · Lookalike 1%',
+      objective: 'Geração de Leads',
+      audience: 'Lookalike de compradores (base atual)',
+      budget: Math.round(topoBudget * 0.45)
+    },
+    {
+      name: 'Conversão · Meta Ads (VSL)',
+      objective: 'Vendas Diretas',
+      audience: 'Leads quentes (engajados últimos 14 dias)',
+      budget: Math.round(meioBudget * 0.55)
+    },
+    {
+      name: 'Conversão · Google Search',
+      objective: 'Captação Bottom-Funnel',
+      audience: 'Palavras-chave do nicho (intenção alta)',
+      budget: Math.round(meioBudget * 0.45)
+    },
+    {
+      name: 'Remarketing · Visitantes Vendas',
+      objective: 'Recuperação',
+      audience: 'Visitaram página de vendas (últimos 14d)',
+      budget: Math.round(fundoBudget * 0.60)
+    },
+    {
+      name: 'Remarketing · Carrinho Abandonado',
+      objective: 'Recuperação Urgente',
+      audience: 'Iniciaram checkout sem finalizar',
+      budget: Math.round(fundoBudget * 0.40)
+    }
+  ];
+
+  return campaigns;
+}
+
+// ============================================================
+// KPIs
+// ============================================================
+function buildKPIs(modelo, ticket, budget) {
+  const m = MODELOS[modelo];
+  const t = TICKETS[ticket];
+  const cplAvg = (m.kpis.cpl[0] + m.kpis.cpl[1]) / 2;
+  const leads = Math.round(budget / cplAvg);
+  const conversions = Math.round(leads * t.conversionRate);
+  const revenue = conversions * t.avgPrice;
+  const roas = (revenue / budget).toFixed(2);
+
+  return [
+    { label: 'Leads/mês', value: leads.toLocaleString('pt-BR'), trend: `CPL: R$ ${cplAvg.toFixed(0)}` },
+    { label: 'Vendas/mês', value: conversions, trend: `${(t.conversionRate*100).toFixed(1)}% conv.` },
+    { label: 'Receita/mês', value: `R$ ${(revenue/1000).toFixed(1)}k`, trend: `Ticket: R$ ${t.avgPrice}` },
+    { label: 'ROAS', value: `${roas}x`, trend: `Meta: ${m.kpis.roas[0]}–${m.kpis.roas[1]}x` }
+  ];
+}
+
+// ============================================================
+// PROJECTION (90 days)
+// ============================================================
+function buildProjection(budget, ticket, modelo) {
+  const t = TICKETS[ticket];
+  const m = MODELOS[modelo];
+  const cplAvg = (m.kpis.cpl[0] + m.kpis.cpl[1]) / 2;
+  const leadsMonth = budget / cplAvg;
+  const baseConv = leadsMonth * t.conversionRate;
+  return {
+    months: ['Mês 1', 'Mês 2', 'Mês 3'],
+    sales: [
+      Math.round(baseConv * 0.6),
+      Math.round(baseConv * 1.0),
+      Math.round(baseConv * 1.4)
+    ],
+    revenue: [
+      Math.round(baseConv * 0.6 * t.avgPrice),
+      Math.round(baseConv * 1.0 * t.avgPrice),
+      Math.round(baseConv * 1.4 * t.avgPrice)
+    ]
+  };
+}
+
+// ============================================================
+// AUTOMATION FLOWS
+// ============================================================
+function buildNurtureFlow(nicho, modelo) {
+  const days = MODELOS[modelo].nurtureDays;
+  const flow = [
+    { time: 'Dia 0 (imediato)', action: 'Entrega do material da isca + apresentação do especialista', channels: ['Email', 'WhatsApp'] },
+    { time: 'Dia 1', action: 'Conteúdo de valor relacionado à dor principal capturada', channels: ['Email'] },
+    { time: 'Dia 2', action: 'Vídeo-aula bônus com resolução de problema concreto', channels: ['Email', 'WhatsApp'] },
+    { time: 'Dia 3', action: 'História de transformação (case de aluno)', channels: ['Email', 'WhatsApp'] },
+    { time: 'Dia 4', action: 'APRESENTAÇÃO da oferta principal', channels: ['Email'] },
+    { time: 'Dia 5–6', action: 'Quebra de objeções + bônus revelados', channels: ['Email', 'WhatsApp'] },
+    { time: `Dia ${days}`, action: 'ESCASSEZ — cupom expira / oferta encerra', channels: ['Email', 'WhatsApp'] }
+  ];
+  return flow;
+}
+
+function buildCartFlow() {
+  return [
+    { time: '+ 15min', action: 'WhatsApp: "Travou em algo? Posso ajudar a finalizar"', channels: ['WhatsApp'] },
+    { time: '+ 1h', action: 'Áudio personalizado do especialista', channels: ['WhatsApp'] },
+    { time: '+ 24h', action: 'Email + WhatsApp: oferta expirando hoje', channels: ['Email', 'WhatsApp'] },
+    { time: '+ 48h', action: 'Pix copia-e-cola facilitado ou novo método', channels: ['WhatsApp'] },
+    { time: '+ 72h', action: 'Última chance — cupom adicional de R$ 30 OFF', channels: ['Email', 'WhatsApp'] }
+  ];
+}
+
+// ============================================================
+// PAGE STRUCTURE
+// ============================================================
+function buildPageStructure() {
+  return [
+    { num: '01', name: 'Dobra Principal (Hero)', purpose: 'Headline de impacto + VSL/vídeo + CTA primário' },
+    { num: '02', name: 'Conexão / Empatia', purpose: 'Agitação das dores da persona (checklist emocional)' },
+    { num: '03', name: 'A Solução', purpose: 'Apresentação do produto e seus diferenciais únicos' },
+    { num: '04', name: 'Conteúdo Programático', purpose: 'O que tem dentro do curso (módulos detalhados)' },
+    { num: '05', name: 'Bônus Exclusivos', purpose: 'Ancoragem de valor (preços fictícios por bônus)' },
+    { num: '06', name: 'Prova Social & Autoridade', purpose: 'Depoimentos em vídeo + bio do especialista' },
+    { num: '07', name: 'Oferta, Preço & Garantia', purpose: 'CTA final + quebra de risco (garantia incondicional)' }
+  ];
+}
+
+// ============================================================
+// FORM NAVIGATION
+// ============================================================
+function startAnalysis() {
+  document.getElementById('hero').style.display = 'none';
+  document.getElementById('analyzer').classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updateProgress() {
+  const steps = document.querySelectorAll('.progress-step');
+  steps.forEach((step, i) => {
+    const num = i + 1;
+    step.classList.remove('active', 'completed');
+    if (num < state.currentStep) step.classList.add('completed');
+    else if (num === state.currentStep) step.classList.add('active');
+  });
+
+  document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
+  document.querySelector(`.form-step[data-step="${state.currentStep}"]`).classList.add('active');
+
+  document.getElementById('prevBtn').style.visibility = state.currentStep === 1 ? 'hidden' : 'visible';
+  document.getElementById('nextBtn').querySelector('span').textContent =
+    state.currentStep === state.totalSteps ? 'Gerar análise →' : 'Próximo →';
+}
+
+function validateStep() {
+  if (state.currentStep === 1) {
+    const name = document.getElementById('productName').value.trim();
+    const desc = document.getElementById('productDesc').value.trim();
+    if (!name || !desc) { alert('Preencha o nome e a descrição do produto.'); return false; }
+    state.data.productName = name;
+    state.data.productDesc = desc;
+    return true;
+  }
+  if (state.currentStep === 2) {
+    if (!state.data.nicho) { alert('Selecione um nicho.'); return false; }
+    return true;
+  }
+  if (state.currentStep === 3) {
+    if (!state.data.modelo) { alert('Selecione um modelo de comercialização.'); return false; }
+    return true;
+  }
+  if (state.currentStep === 4) {
+    if (!state.data.ticket) { alert('Selecione uma faixa de preço.'); return false; }
+    return true;
+  }
+  if (state.currentStep === 5) {
+    if (!state.data.budget) { alert('Selecione um orçamento.'); return false; }
+    return true;
+  }
+  return true;
+}
+
+function nextStep() {
+  if (!validateStep()) return;
+  if (state.currentStep === state.totalSteps) { runAnalysis(); return; }
+  state.currentStep++;
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function prevStep() {
+  if (state.currentStep > 1) {
+    state.currentStep--;
+    updateProgress();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+// Option card click handlers
+function bindOptionGrids() {
+  const gridConfig = [
+    { gridId: 'nichoGrid', field: 'nicho' },
+    { gridId: 'modeloGrid', field: 'modelo' },
+    { gridId: 'ticketGrid', field: 'ticket' },
+    { gridId: 'budgetGrid', field: 'budget' }
+  ];
+
+  gridConfig.forEach(g => {
+    const grid = document.getElementById(g.gridId);
+    grid.addEventListener('click', e => {
+      const card = e.target.closest('.option-card');
+      if (!card) return;
+      grid.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      state.data[g.field] = card.dataset.value;
+    });
+  });
+}
+
+// ============================================================
+// LOADING + ANALYSIS RUN
+// ============================================================
+async function runAnalysis() {
+  document.getElementById('analyzer').classList.remove('active');
+  const loader = document.getElementById('loadingScreen');
+  loader.classList.add('active');
+
+  const statusEl = document.getElementById('loadingStatus');
+  const statuses = [
+    'Mapeando público-alvo e dores...',
+    'Construindo persona detalhada...',
+    'Desenhando funil de jornada...',
+    'Calculando distribuição de tráfego...',
+    'Estruturando automação e KPIs...'
+  ];
+
+  for (let i = 0; i < 5; i++) {
+    statusEl.textContent = statuses[i];
+    await sleep(700);
+    document.querySelector(`.loading-step-item[data-step="${i+1}"]`).classList.add('done');
+    document.querySelector(`.loading-step-item[data-step="${i+1}"] .check`).textContent = '✓';
+  }
+
+  await sleep(400);
+  loader.classList.remove('active');
+  generateResults();
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+// ============================================================
+// GENERATE RESULTS
+// ============================================================
+function generateResults() {
+  const data = state.data;
+  const nicho = NICHOS[data.nicho];
+  const modelo = MODELOS[data.modelo];
+  const ticket = TICKETS[data.ticket];
+  const budget = parseInt(data.budget);
+
+  // Header
+  document.getElementById('resultProductName').textContent = data.productName;
+  document.getElementById('resultSummary').textContent = data.productDesc;
+  document.getElementById('resultTags').innerHTML = `
+    <span class="tag">${nicho.label}</span>
+    <span class="tag">${modelo.label}</span>
+    <span class="tag">${ticket.label}</span>
+    <span class="tag">Budget: R$ ${budget.toLocaleString('pt-BR')}/mês</span>
+  `;
+
+  // Persona
+  const p = nicho.persona;
+  document.getElementById('personaName').textContent = p.name;
+  document.getElementById('personaTitle').textContent = p.title;
+  document.getElementById('personaAvatar').textContent = p.avatar;
+  document.getElementById('personaBio').textContent = p.bio;
+  document.getElementById('personaAttrs').innerHTML = `
+    <div class="persona-attr"><div class="persona-attr-label">Idade</div><div class="persona-attr-value">${p.age}</div></div>
+    <div class="persona-attr"><div class="persona-attr-label">Ocupação</div><div class="persona-attr-value">${p.occupation}</div></div>
+    <div class="persona-attr"><div class="persona-attr-label">Renda</div><div class="persona-attr-value">${p.income}</div></div>
+    <div class="persona-attr"><div class="persona-attr-label">Localização</div><div class="persona-attr-value">${p.location}</div></div>
+    <div class="persona-attr" style="grid-column: span 2"><div class="persona-attr-label">Canais consumidos</div><div class="persona-attr-value">${p.channels}</div></div>
+  `;
+  document.getElementById('personaDores').innerHTML = nicho.dores.map(d => `<li>${d}</li>`).join('');
+  document.getElementById('personaDesejos').innerHTML = nicho.desejos.map(d => `<li>${d}</li>`).join('');
+  document.getElementById('personaObjecoes').innerHTML = nicho.objecoes.map(o => `<li>${o}</li>`).join('');
+
+  // Funil
+  const funnel = buildFunnel(nicho, modelo);
+  document.getElementById('funnelContainer').innerHTML = funnel.map((f, i) => `
+    <div class="funnel-stage funnel-stage-${i+1}">
+      <div class="funnel-icon">${f.icon}</div>
+      <div class="funnel-info">
+        <h4>${f.title} <span style="font-size:11px; color:var(--purple-bright); margin-left:8px; letter-spacing:1px;">${f.level}</span></h4>
+        <p>${f.desc}</p>
+      </div>
+      <div class="funnel-rate">${f.rate}</div>
+    </div>
+  `).join('');
+
+  // Captação
+  document.getElementById('iscaA').innerHTML = `
+    <h4 style="font-size:17px; margin-bottom:8px;">${nicho.iscaTitle}</h4>
+    <p style="color:var(--text-gray); font-size:14px; margin-bottom:16px;">${nicho.iscaDesc}</p>
+    <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:12px;">
+      <span class="tag">Conversão alvo: 35–50%</span>
+      <span class="tag">CPL: R$ ${modelo.kpis.cpl[0]}–${modelo.kpis.cpl[1]}</span>
+    </div>
+  `;
+
+  document.getElementById('lpHeadline').innerHTML = `
+    <div class="headline-example">${nicho.headline}</div>
+    <p style="font-size:13px; color:var(--text-gray); margin-top:12px;">
+      Headline customizada para o seu nicho — combina urgência, especificidade temporal e transformação aspiracional.
+    </p>
+  `;
+
+  // Landing Page Structure
+  const pageStruct = buildPageStructure();
+  document.getElementById('landingBlueprint').innerHTML = pageStruct.map(s => `
+    <div class="lp-section">
+      <div class="lp-num">${s.num}</div>
+      <div class="lp-content">
+        <div class="lp-name">${s.name}</div>
+        <div class="lp-purpose">${s.purpose}</div>
+      </div>
+    </div>
+  `).join('');
+
+  // KPIs
+  const kpis = buildKPIs(data.modelo, data.ticket, budget);
+  document.getElementById('kpiGrid').innerHTML = kpis.map(k => `
+    <div class="kpi-card">
+      <div class="kpi-label">${k.label}</div>
+      <div class="kpi-value">${k.value}</div>
+      <div class="kpi-trend">${k.trend}</div>
+    </div>
+  `).join('');
+
+  // Campanhas
+  const campaigns = buildCampaigns(data.modelo, data.ticket, budget);
+  document.querySelector('#campaignTable tbody').innerHTML = campaigns.map(c => `
+    <tr>
+      <td class="highlight">${c.name}</td>
+      <td>${c.objective}</td>
+      <td>${c.audience}</td>
+      <td><strong>R$ ${c.budget.toLocaleString('pt-BR')}</strong>/mês</td>
+    </tr>
+  `).join('');
+
+  document.getElementById('budgetSubtitle').textContent = `R$ ${budget.toLocaleString('pt-BR')} / mês`;
+
+  // Charts
+  renderBudgetChart(campaigns);
+  renderGrowthChart(buildProjection(budget, data.ticket, data.modelo));
+  renderContentChart(nicho.pilares);
+
+  // Content Examples
+  document.getElementById('contentExamples').innerHTML = nicho.contentExamples.map(c => `
+    <div style="padding: 14px 0; border-bottom: 1px solid var(--border);">
+      <div style="font-size: 11px; color: var(--purple-bright); letter-spacing: 1.5px; margin-bottom: 6px;">${c.tipo.toUpperCase()} DE FUNIL</div>
+      <div style="font-size: 14px; color: var(--text-soft); font-style: italic;">${c.text}</div>
+    </div>
+  `).join('');
+
+  // Automation
+  const nurture = buildNurtureFlow(nicho, data.modelo);
+  document.getElementById('nurtureFlow').innerHTML = nurture.map(f => `
+    <div class="flow-step">
+      <div class="flow-time">${f.time}</div>
+      <div class="flow-action">${f.action}</div>
+      <div class="flow-channels">${f.channels.map(c => `<span class="flow-channel">${c}</span>`).join('')}</div>
+    </div>
+  `).join('');
+
+  const cart = buildCartFlow();
+  document.getElementById('cartFlow').innerHTML = cart.map(f => `
+    <div class="flow-step">
+      <div class="flow-time">${f.time}</div>
+      <div class="flow-action">${f.action}</div>
+      <div class="flow-channels">${f.channels.map(c => `<span class="flow-channel">${c}</span>`).join('')}</div>
+    </div>
+  `).join('');
+
+  // Show results
+  document.getElementById('results').classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ============================================================
+// CHARTS
+// ============================================================
+let chartInstances = {};
+
+const moovePalette = ['#C084FC', '#A855F7', '#8B5CF6', '#7C3AED', '#6D28D9', '#4C1D95'];
+
+const baseChartOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: {
+      labels: {
+        color: '#A89FB8',
+        font: { family: 'Inter', size: 12, weight: '500' },
+        padding: 16,
+        usePointStyle: true,
+        pointStyle: 'circle'
+      },
+      position: 'bottom'
+    },
+    tooltip: {
+      backgroundColor: 'rgba(15, 8, 30, 0.95)',
+      titleColor: '#C084FC',
+      bodyColor: '#FFFFFF',
+      borderColor: 'rgba(168, 85, 247, 0.5)',
+      borderWidth: 1,
+      padding: 12,
+      titleFont: { family: 'Inter', weight: '700' },
+      bodyFont: { family: 'Inter' },
+      cornerRadius: 8
+    }
+  }
+};
+
+function renderBudgetChart(campaigns) {
+  if (chartInstances.budget) chartInstances.budget.destroy();
+  const ctx = document.getElementById('budgetChart').getContext('2d');
+  chartInstances.budget = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: campaigns.map(c => c.name),
+      datasets: [{
+        data: campaigns.map(c => c.budget),
+        backgroundColor: moovePalette,
+        borderColor: 'rgba(7, 5, 15, 0.9)',
+        borderWidth: 3,
+        hoverOffset: 12
+      }]
+    },
+    options: {
+      ...baseChartOptions,
+      cutout: '60%',
+      plugins: {
+        ...baseChartOptions.plugins,
+        legend: {
+          ...baseChartOptions.plugins.legend,
+          labels: { ...baseChartOptions.plugins.legend.labels, font: { size: 11 } }
+        },
+        tooltip: {
+          ...baseChartOptions.plugins.tooltip,
+          callbacks: {
+            label: (ctx) => `R$ ${ctx.parsed.toLocaleString('pt-BR')}`
+          }
+        }
+      }
+    }
+  });
+}
+
+function renderGrowthChart(projection) {
+  if (chartInstances.growth) chartInstances.growth.destroy();
+  const ctx = document.getElementById('growthChart').getContext('2d');
+  const gradient = ctx.createLinearGradient(0, 0, 0, 320);
+  gradient.addColorStop(0, 'rgba(168, 85, 247, 0.5)');
+  gradient.addColorStop(1, 'rgba(168, 85, 247, 0)');
+
+  chartInstances.growth = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: projection.months,
+      datasets: [{
+        label: 'Vendas',
+        data: projection.sales,
+        borderColor: '#C084FC',
+        backgroundColor: gradient,
+        borderWidth: 3,
+        fill: true,
+        tension: 0.4,
+        pointBackgroundColor: '#C084FC',
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2,
+        pointRadius: 6,
+        pointHoverRadius: 8
+      }]
+    },
+    options: {
+      ...baseChartOptions,
+      scales: {
+        x: {
+          grid: { color: 'rgba(139, 92, 246, 0.08)' },
+          ticks: { color: '#A89FB8' }
+        },
+        y: {
+          grid: { color: 'rgba(139, 92, 246, 0.08)' },
+          ticks: { color: '#A89FB8', beginAtZero: true }
+        }
+      },
+      plugins: {
+        ...baseChartOptions.plugins,
+        legend: { display: false },
+        tooltip: {
+          ...baseChartOptions.plugins.tooltip,
+          callbacks: {
+            label: (ctx) => `${ctx.parsed.y} vendas · R$ ${projection.revenue[ctx.dataIndex].toLocaleString('pt-BR')}`
+          }
+        }
+      }
+    }
+  });
+}
+
+function renderContentChart(pilares) {
+  if (chartInstances.content) chartInstances.content.destroy();
+  const ctx = document.getElementById('contentChart').getContext('2d');
+  chartInstances.content = new Chart(ctx, {
+    type: 'polarArea',
+    data: {
+      labels: Object.keys(pilares),
+      datasets: [{
+        data: Object.values(pilares),
+        backgroundColor: [
+          'rgba(192, 132, 252, 0.7)',
+          'rgba(168, 85, 247, 0.7)',
+          'rgba(139, 92, 246, 0.7)'
+        ],
+        borderColor: '#C084FC',
+        borderWidth: 2
+      }]
+    },
+    options: {
+      ...baseChartOptions,
+      scales: {
+        r: {
+          grid: { color: 'rgba(139, 92, 246, 0.15)' },
+          angleLines: { color: 'rgba(139, 92, 246, 0.15)' },
+          ticks: { color: '#A89FB8', backdropColor: 'transparent' },
+          pointLabels: { color: '#E8E0FF' }
+        }
+      },
+      plugins: {
+        ...baseChartOptions.plugins,
+        tooltip: {
+          ...baseChartOptions.plugins.tooltip,
+          callbacks: { label: (ctx) => `${ctx.parsed.r}% do conteúdo` }
+        }
+      }
+    }
+  });
+}
+
+// ============================================================
+// RESET
+// ============================================================
+function resetApp() {
+  state.currentStep = 1;
+  state.data = { productName: '', productDesc: '', nicho: '', modelo: '', ticket: '', budget: '' };
+  document.getElementById('productName').value = '';
+  document.getElementById('productDesc').value = '';
+  document.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+  document.querySelectorAll('.loading-step-item').forEach(s => {
+    s.classList.remove('done');
+    s.querySelector('.check').textContent = '○';
+  });
+  updateProgress();
+  document.getElementById('hero').style.display = 'flex';
+  document.getElementById('analyzer').classList.remove('active');
+  document.getElementById('results').classList.remove('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ============================================================
+// INIT
+// ============================================================
+bindOptionGrids();
+updateProgress();
+</script>
+
+</body>
+</html>
