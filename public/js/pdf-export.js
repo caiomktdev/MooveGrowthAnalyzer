@@ -1,4 +1,4 @@
-import { PDFDocument, rgb, StandardFonts } from 'https://esm.sh/pdf-lib@1.17.1';
+import { PDFDocument, rgb, StandardFonts } from './vendor/pdf-lib.js';
 
 const PURPLE = rgb(0.545, 0.361, 0.965);
 const PURPLE_DARK = rgb(0.18, 0.08, 0.35);

@@ -38,6 +38,7 @@ function setMeta(plan) {
 
 function showError(message) {
   document.getElementById('shareLoading').style.display = 'none';
+  document.getElementById('shareContent').style.display = 'none';
   document.getElementById('shareError').style.display = 'block';
   document.getElementById('shareErrorMsg').textContent = message;
 }
@@ -91,17 +92,18 @@ async function init() {
         year: 'numeric'
       });
 
-    document.getElementById('shareLoading').style.display = 'none';
-    document.getElementById('shareContent').style.display = 'block';
-
     if (currentPlan.chartImages) {
       renderPlanToDOM(currentPlan, { useChartImages: true });
     } else {
       renderPlanToDOM(currentPlan);
       renderAllCharts(currentPlan);
     }
-  } catch {
-    showError('Erro de conexão ao carregar o plano.');
+
+    document.getElementById('shareLoading').style.display = 'none';
+    document.getElementById('shareContent').style.display = 'block';
+  } catch (err) {
+    console.error('share-view init failed:', err);
+    showError('Erro ao carregar o plano. Tente novamente em instantes.');
   }
 }
 
