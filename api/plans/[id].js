@@ -10,23 +10,19 @@ function json(status, body) {
   });
 }
 
-export default async function handler(req) {
-  if (req.method === 'OPTIONS') {
-    return new Response(null, {
-      status: 204,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type'
-      }
-    });
-  }
+export async function OPTIONS() {
+  return new Response(null, {
+    status: 204,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type'
+    }
+  });
+}
 
-  if (req.method !== 'GET') {
-    return json(405, { error: 'Method not allowed' });
-  }
-
-  const url = new URL(req.url);
+export async function GET(request) {
+  const url = new URL(request.url);
   const id = url.pathname.split('/').pop();
 
   if (!id || id === 'plans') {

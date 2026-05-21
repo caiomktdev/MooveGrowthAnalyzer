@@ -13,25 +13,21 @@ function json(status, body) {
   });
 }
 
-export default async function handler(req) {
-  if (req.method === 'OPTIONS') {
-    return new Response(null, {
-      status: 204,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type'
-      }
-    });
-  }
+export async function OPTIONS() {
+  return new Response(null, {
+    status: 204,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type'
+    }
+  });
+}
 
-  if (req.method !== 'POST') {
-    return json(405, { error: 'Method not allowed' });
-  }
-
+export async function POST(request) {
   let body;
   try {
-    body = await req.json();
+    body = await request.json();
   } catch {
     return json(400, { error: 'Invalid JSON body' });
   }
@@ -45,7 +41,7 @@ export default async function handler(req) {
   }
 
   const id = randomUUID();
-  const shareBase = process.env.SHARE_BASE_URL || new URL(req.url).origin;
+  const shareBase = process.env.SHARE_BASE_URL || new URL(request.url).origin;
   const plan = {
     ...body,
     id,
